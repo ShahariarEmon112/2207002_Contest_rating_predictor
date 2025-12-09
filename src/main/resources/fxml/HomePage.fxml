@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.contestpredictor.controller.HomePageController"
+            styleClass="root">
+    
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="20">
+            <padding>
+                <Insets top="15" right="30" bottom="15" left="30"/>
+            </padding>
+            
+            <Label text="📊 Contest Rating Predictor" styleClass="nav-brand">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button text="Home" styleClass="nav-button" onAction="#handleHomeClick"/>
+            <Button text="Features" styleClass="nav-button" onAction="#handleFeaturesClick"/>
+            <Button text="About" styleClass="nav-button" onAction="#handleAboutClick"/>
+            <Button text="Contact" styleClass="nav-button" onAction="#handleContactClick"/>
+        </HBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="scroll-pane">
+            <VBox spacing="0" styleClass="main-content">
+                
+                <!-- Hero Section -->
+                <HBox styleClass="hero-section" alignment="CENTER" spacing="50">
+                    <padding>
+                        <Insets top="80" right="50" bottom="80" left="50"/>
+                    </padding>
+                    
+                    <VBox spacing="25" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                        <Label text="Predict Your Contest Rating" styleClass="hero-title">
+                            <font>
+                                <Font name="System Bold" size="42"/>
+                            </font>
+                        </Label>
+                        
+                        <Label text="Analyze your performance and predict your rating changes with advanced algorithms" 
+                               styleClass="hero-subtitle" wrapText="true" maxWidth="550">
+                            <font>
+                                <Font size="18"/>
+                            </font>
+                        </Label>
+                        
+                        <HBox spacing="15">
+                            <Button text="Get Started" styleClass="btn-primary" onAction="#handleGetStartedClick">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Button>
+                            <Button text="Learn More" styleClass="btn-secondary" onAction="#handleLearnMoreClick">
+                                <font>
+                                    <Font name="System Bold" size="14"/>
+                                </font>
+                            </Button>
+                        </HBox>
+                    </VBox>
+                    
+                    <!-- Chart Visualization -->
+                    <VBox styleClass="chart-container" alignment="BOTTOM_CENTER" spacing="0" prefWidth="350" prefHeight="300">
+                        <HBox alignment="BOTTOM_CENTER" spacing="15" styleClass="chart-bars">
+                            <VBox styleClass="chart-bar" prefWidth="50" prefHeight="180" VBox.vgrow="ALWAYS"/>
+                            <VBox styleClass="chart-bar" prefWidth="50" prefHeight="240" VBox.vgrow="ALWAYS"/>
+                            <VBox styleClass="chart-bar" prefWidth="50" prefHeight="300" VBox.vgrow="ALWAYS"/>
+                            <VBox styleClass="chart-bar" prefWidth="50" prefHeight="210" VBox.vgrow="ALWAYS"/>
+                            <VBox styleClass="chart-bar" prefWidth="50" prefHeight="270" VBox.vgrow="ALWAYS"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+                
+                <!-- Features Section -->
+                <VBox styleClass="features-section" alignment="CENTER" spacing="40">
+                    <padding>
+                        <Insets top="80" right="50" bottom="80" left="50"/>
+                    </padding>
+                    
+                    <Label text="Why Choose Us?" styleClass="section-title">
+                        <font>
+                            <Font name="System Bold" size="36"/>
+                        </font>
+                    </Label>
+                    
+                    <GridPane hgap="30" vgap="30" alignment="CENTER">
+                        <!-- Feature 1 -->
+                        <VBox styleClass="feature-card" alignment="CENTER" spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="30" right="25" bottom="30" left="25"/>
+                            </padding>
+                            <Label text="🎯" styleClass="feature-icon">
+                                <font>
+                                    <Font size="48"/>
+                                </font>
+                            </Label>
+                            <Label text="Accurate Predictions" styleClass="feature-title">
+                                <font>
+                                    <Font name="System Bold" size="20"/>
+                                </font>
+                            </Label>
+                            <Label text="Our advanced algorithms provide precise rating predictions based on historical data and performance metrics." 
+                                   styleClass="feature-text" wrapText="true" textAlignment="CENTER" maxWidth="250">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Button text="Explore" styleClass="btn-small" onAction="#handleExploreClick"/>
+                        </VBox>
+                        
+                        <!-- Feature 2 -->
+                        <VBox styleClass="feature-card" alignment="CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <padding>
+                                <Insets top="30" right="25" bottom="30" left="25"/>
+                            </padding>
+                            <Label text="📈" styleClass="feature-icon">
+                                <font>
+                                    <Font size="48"/>
+                                </font>
+                            </Label>
+                            <Label text="Real-time Analysis" styleClass="feature-title">
+                                <font>
+                                    <Font name="System Bold" size="20"/>
+                                </font>
+                            </Label>
+                            <Label text="Get instant feedback on your contest performance and see how your rating will change." 
+                                   styleClass="feature-text" wrapText="true" textAlignment="CENTER" maxWidth="250">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Button text="Try Now" styleClass="btn-small" onAction="#handleTryNowClick"/>
+                        </VBox>
+                        
+                        <!-- Feature 3 -->
+                        <VBox styleClass="feature-card" alignment="CENTER" spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <padding>
+                                <Insets top="30" right="25" bottom="30" left="25"/>
+                            </padding>
+                            <Label text="🏆" styleClass="feature-icon">
+                                <font>
+                                    <Font size="48"/>
+                                </font>
+                            </Label>
+                            <Label text="Track Progress" styleClass="feature-title">
+                                <font>
+                                    <Font name="System Bold" size="20"/>
+                                </font>
+                            </Label>
+                            <Label text="Monitor your rating journey and identify patterns to improve your competitive programming skills." 
+                                   styleClass="feature-text" wrapText="true" textAlignment="CENTER" maxWidth="250">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Button text="View Stats" styleClass="btn-small" onAction="#handleViewStatsClick"/>
+                        </VBox>
+                        
+                        <!-- Feature 4 -->
+                        <VBox styleClass="feature-card" alignment="CENTER" spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <padding>
+                                <Insets top="30" right="25" bottom="30" left="25"/>
+                            </padding>
+                            <Label text="💡" styleClass="feature-icon">
+                                <font>
+                                    <Font size="48"/>
+                                </font>
+                            </Label>
+                            <Label text="Smart Insights" styleClass="feature-title">
+                                <font>
+                                    <Font name="System Bold" size="20"/>
+                                </font>
+                            </Label>
+                            <Label text="Receive personalized recommendations to optimize your contest strategy and maximize rating gains." 
+                                   styleClass="feature-text" wrapText="true" textAlignment="CENTER" maxWidth="250">
+                                <font>
+                                    <Font size="14"/>
+                                </font>
+                            </Label>
+                            <Button text="Get Insights" styleClass="btn-small" onAction="#handleGetInsightsClick"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Stats Section -->
+                <HBox styleClass="stats-section" alignment="CENTER" spacing="80">
+                    <padding>
+                        <Insets top="60" right="50" bottom="60" left="50"/>
+                    </padding>
+                    
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="10K+" styleClass="stat-number">
+                            <font>
+                                <Font name="System Bold" size="42"/>
+                            </font>
+                        </Label>
+                        <Label text="Predictions Made" styleClass="stat-label">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="95%" styleClass="stat-number">
+                            <font>
+                                <Font name="System Bold" size="42"/>
+                            </font>
+                        </Label>
+                        <Label text="Accuracy Rate" styleClass="stat-label">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="5K+" styleClass="stat-number">
+                            <font>
+                                <Font name="System Bold" size="42"/>
+                            </font>
+                        </Label>
+                        <Label text="Active Users" styleClass="stat-label">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label text="50+" styleClass="stat-number">
+                            <font>
+                                <Font name="System Bold" size="42"/>
+                            </font>
+                        </Label>
+                        <Label text="Platforms Supported" styleClass="stat-label">
+                            <font>
+                                <Font size="16"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                </HBox>
+                
+                <!-- CTA Section -->
+                <VBox styleClass="cta-section" alignment="CENTER" spacing="25">
+                    <padding>
+                        <Insets top="80" right="50" bottom="80" left="50"/>
+                    </padding>
+                    
+                    <Label text="Ready to Predict Your Rating?" styleClass="cta-title">
+                        <font>
+                            <Font name="System Bold" size="36"/>
+                        </font>
+                    </Label>
+                    
+                    <Label text="Join thousands of competitive programmers who trust our predictions" styleClass="cta-text">
+                        <font>
+                            <Font size="18"/>
+                        </font>
+                    </Label>
+                    
+                    <HBox spacing="15" alignment="CENTER">
+                        <Button text="Start Predicting" styleClass="btn-primary-large" onAction="#handleStartPredictingClick">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Button>
+                        <Button text="View Demo" styleClass="btn-outline-large" onAction="#handleViewDemoClick">
+                            <font>
+                                <Font name="System Bold" size="16"/>
+                            </font>
+                        </Button>
+                    </HBox>
+                </VBox>
+                
+                <!-- Footer -->
+                <HBox styleClass="footer" spacing="60" alignment="CENTER">
+                    <padding>
+                        <Insets top="50" right="50" bottom="50" left="50"/>
+                    </padding>
+                    
+                    <VBox spacing="15" alignment="TOP_LEFT" prefWidth="250">
+                        <Label text="Contest Rating Predictor" styleClass="footer-title">
+                            <font>
+                                <Font name="System Bold" size="18"/>
+                            </font>
+                        </Label>
+                        <Label text="Your trusted partner in competitive programming success." 
+                               styleClass="footer-text" wrapText="true">
+                            <font>
+                                <Font size="13"/>
+                            </font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox spacing="12" alignment="TOP_LEFT">
+                        <Label text="Quick Links" styleClass="footer-section-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <Hyperlink text="Home" styleClass="footer-link" onAction="#handleFooterHomeClick"/>
+                        <Hyperlink text="Features" styleClass="footer-link" onAction="#handleFooterFeaturesClick"/>
+                        <Hyperlink text="Pricing" styleClass="footer-link" onAction="#handleFooterPricingClick"/>
+                        <Hyperlink text="FAQ" styleClass="footer-link" onAction="#handleFooterFaqClick"/>
+                    </VBox>
+                    
+                    <VBox spacing="12" alignment="TOP_LEFT">
+                        <Label text="Resources" styleClass="footer-section-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <Hyperlink text="Documentation" styleClass="footer-link" onAction="#handleFooterDocsClick"/>
+                        <Hyperlink text="API" styleClass="footer-link" onAction="#handleFooterApiClick"/>
+                        <Hyperlink text="Blog" styleClass="footer-link" onAction="#handleFooterBlogClick"/>
+                        <Hyperlink text="Support" styleClass="footer-link" onAction="#handleFooterSupportClick"/>
+                    </VBox>
+                    
+                    <VBox spacing="12" alignment="TOP_LEFT">
+                        <Label text="Connect" styleClass="footer-section-title">
+                            <font>
+                                <Font name="System Bold" size="14"/>
+                            </font>
+                        </Label>
+                        <Hyperlink text="Twitter" styleClass="footer-link" onAction="#handleFooterTwitterClick"/>
+                        <Hyperlink text="GitHub" styleClass="footer-link" onAction="#handleFooterGithubClick"/>
+                        <Hyperlink text="LinkedIn" styleClass="footer-link" onAction="#handleFooterLinkedinClick"/>
+                        <Hyperlink text="Discord" styleClass="footer-link" onAction="#handleFooterDiscordClick"/>
+                    </VBox>
+                </HBox>
+                
+                <!-- Footer Bottom -->
+                <HBox styleClass="footer-bottom" alignment="CENTER">
+                    <padding>
+                        <Insets top="20" right="50" bottom="20" left="50"/>
+                    </padding>
+                    <Label text="© 2025 Contest Rating Predictor. All rights reserved." styleClass="footer-copyright">
+                        <font>
+                            <Font size="12"/>
+                        </font>
+                    </Label>
+                </HBox>
+                
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+</BorderPane>
