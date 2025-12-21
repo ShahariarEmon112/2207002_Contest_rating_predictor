@@ -10,12 +10,13 @@
             styleClass="login-root" prefWidth="1000" prefHeight="650">
     
     <center>
-        <HBox alignment="CENTER" spacing="0">
-            <!-- Left Side - Welcome Panel -->
-            <VBox styleClass="login-left-panel" alignment="CENTER" spacing="20" prefWidth="500">
-                <padding>
-                    <Insets top="40" right="40" bottom="40" left="40"/>
-                </padding>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+            <HBox alignment="CENTER" spacing="0">
+                <!-- Left Side - Welcome Panel -->
+                <VBox styleClass="login-left-panel" alignment="CENTER" spacing="20" prefWidth="500">
+                    <padding>
+                        <Insets top="40" right="40" bottom="40" left="40"/>
+                    </padding>
                 
                 <Label text="📊" styleClass="login-icon">
                     <font>
@@ -164,6 +165,7 @@
                     </HBox>
                 </VBox>
             </VBox>
-        </HBox>
+            </HBox>
+        </ScrollPane>
     </center>
 </BorderPane>

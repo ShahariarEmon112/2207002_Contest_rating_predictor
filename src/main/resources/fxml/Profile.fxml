@@ -24,7 +24,7 @@
             
             <Region HBox.hgrow="ALWAYS"/>
             
-            <Button text="Search Contests" styleClass="navbar-button" onAction="#handleSearchContest">
+            <Button fx:id="searchContestButton" text="Contest" styleClass="navbar-button" onAction="#handleSearchContest">
                 <font><Font name="System Bold" size="14"/></font>
             </Button>
             
@@ -40,14 +40,15 @@
     
     <!-- Main Content -->
     <center>
-        <VBox spacing="30" alignment="TOP_CENTER" styleClass="profile-content">
-            <padding>
-                <Insets top="40" right="40" bottom="40" left="40"/>
-            </padding>
-            
-            <!-- Profile Header -->
-            <VBox spacing="15" alignment="CENTER" styleClass="profile-header">
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+            <VBox spacing="30" alignment="TOP_CENTER" styleClass="profile-content">
                 <padding>
+                    <Insets top="40" right="40" bottom="40" left="40"/>
+                </padding>
+                
+                <!-- Profile Header -->
+                <VBox spacing="15" alignment="CENTER" styleClass="profile-header">
+                    <padding>
                     <Insets top="30" right="30" bottom="30" left="30"/>
                 </padding>
                 
@@ -174,6 +175,7 @@
                     </font>
                 </Button>
             </HBox>
-        </VBox>
+            </VBox>
+        </ScrollPane>
     </center>
 </BorderPane>
