@@ -194,9 +194,9 @@ public class ContestSearchController {
 
         // Action button
         Button actionButton = new Button(contest.isPast() ? "View Results" : "View Details");
-        actionButton.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;");
-        actionButton.setOnMouseEntered(e -> actionButton.setStyle("-fx-background-color: #5568d3; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;"));
-        actionButton.setOnMouseExited(e -> actionButton.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;"));
+        actionButton.setStyle("-fx-background-color: #8B5CF6; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;");
+        actionButton.setOnMouseEntered(e -> actionButton.setStyle("-fx-background-color: #7C3AED; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;"));
+        actionButton.setOnMouseExited(e -> actionButton.setStyle("-fx-background-color: #8B5CF6; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 10 20; -fx-cursor: hand; -fx-font-weight: bold;"));
         actionButton.setOnAction(e -> showContestDetails(contest));
 
         card.getChildren().addAll(header, nameLabel, details, actionButton);
@@ -344,7 +344,9 @@ public class ContestSearchController {
         
         // Close button
         Button closeButton = new Button("Close");
-        closeButton.setStyle("-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 8; -fx-cursor: hand;");
+        closeButton.setStyle("-fx-background-color: #3B82F6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 8; -fx-cursor: hand;");
+        closeButton.setOnMouseEntered(e -> closeButton.setStyle("-fx-background-color: #2563EB; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 8; -fx-cursor: hand;"));
+        closeButton.setOnMouseExited(e -> closeButton.setStyle("-fx-background-color: #3B82F6; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 30; -fx-background-radius: 8; -fx-cursor: hand;"));
         closeButton.setOnAction(e -> detailsStage.close());
         
         HBox buttonBox = new HBox(closeButton);

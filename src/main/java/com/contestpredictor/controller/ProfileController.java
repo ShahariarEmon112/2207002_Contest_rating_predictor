@@ -50,7 +50,9 @@ public class ProfileController {
             
             int rating = currentUser.getCurrentRating();
             ratingLabel.setText(String.valueOf(rating));
-            ratingColorLabel.setText(getRatingColor(rating));
+            String colorName = getRatingColor(rating);
+            ratingColorLabel.setText(colorName);
+            ratingColorLabel.setStyle("-fx-text-fill: " + getRatingColorHex(rating) + "; -fx-font-weight: bold;");
             
             contestsLabel.setText(String.valueOf(currentUser.getContestsParticipated()));
             
@@ -72,6 +74,17 @@ public class ProfileController {
         else if (rating < 2400) return "Yellow";
         else if (rating < 2800) return "Orange";
         else return "Red";
+    }
+
+    private String getRatingColorHex(int rating) {
+        if (rating < 400) return "#9CA3AF"; // Gray
+        else if (rating < 800) return "#92400E"; // Brown
+        else if (rating < 1200) return "#10B981"; // Green
+        else if (rating < 1600) return "#06B6D4"; // Cyan
+        else if (rating < 2000) return "#3B82F6"; // Blue
+        else if (rating < 2400) return "#FBBF24"; // Yellow
+        else if (rating < 2800) return "#F97316"; // Orange
+        else return "#EF4444"; // Red
     }
 
     @FXML
