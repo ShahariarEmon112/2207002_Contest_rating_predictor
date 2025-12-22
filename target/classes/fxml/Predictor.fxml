@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="com.contestpredictor.controller.PredictorController"
+            styleClass="predictor-root">
+    
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="20" prefHeight="70">
+            <padding>
+                <Insets top="10" right="30" bottom="10" left="30"/>
+            </padding>
+            
+            <Label text="📊 Contest Rating Predictor" styleClass="navbar-brand">
+                <font>
+                    <Font name="System Bold" size="20"/>
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button fx:id="searchContestButton" text="Contest" styleClass="navbar-button" onAction="#handleSearchContest">
+                <font><Font name="System Bold" size="14"/></font>
+            </Button>
+            
+            <Button text="Profile" styleClass="navbar-button" onAction="#handleProfile">
+                <font><Font name="System Bold" size="14"/></font>
+            </Button>
+            
+            <Button text="Logout" styleClass="navbar-button-logout" onAction="#handleLogout">
+                <font><Font name="System Bold" size="14"/></font>
+            </Button>
+        </HBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+            <VBox spacing="30" alignment="TOP_CENTER" styleClass="predictor-content">
+                <padding>
+                    <Insets top="40" right="60" bottom="40" left="60"/>
+                </padding>
+                
+                <!-- Title Section -->
+                <VBox spacing="10" alignment="CENTER">
+                    <Label text="🎯 Rating Predictor" styleClass="predictor-title">
+                        <font>
+                            <Font name="System Bold" size="36"/>
+                        </font>
+                    </Label>
+                    <Label text="Predict your rating change based on your contest rank" styleClass="predictor-subtitle">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </Label>
+                </VBox>
+            
+            <!-- Current Stats Display -->
+            <HBox spacing="30" alignment="CENTER">
+                <VBox spacing="5" alignment="CENTER" styleClass="current-stat-box">
+                    <padding>
+                        <Insets top="15" right="20" bottom="15" left="20"/>
+                    </padding>
+                    <Label text="Current Rating" styleClass="stat-label-small">
+                        <font><Font size="12"/></font>
+                    </Label>
+                    <Label fx:id="currentRatingLabel" text="1000" styleClass="stat-value-small">
+                        <font><Font name="System Bold" size="24"/></font>
+                    </Label>
+                </VBox>
+                
+                <VBox spacing="5" alignment="CENTER" styleClass="current-stat-box">
+                    <padding>
+                        <Insets top="15" right="20" bottom="15" left="20"/>
+                    </padding>
+                    <Label text="Contests" styleClass="stat-label-small">
+                        <font><Font size="12"/></font>
+                    </Label>
+                    <Label fx:id="contestsCountLabel" text="0" styleClass="stat-value-small">
+                        <font><Font name="System Bold" size="24"/></font>
+                    </Label>
+                </VBox>
+            </HBox>
+            
+            <!-- Input Section -->
+            <VBox spacing="25" alignment="CENTER" maxWidth="600" styleClass="predictor-input-section">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+                
+                <VBox spacing="10">
+                    <Label text="Total Participants" styleClass="input-label">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <TextField fx:id="totalParticipantsField" promptText="e.g., 1000" styleClass="predictor-textfield">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </TextField>
+                    <Label text="Enter the total number of participants in the contest" styleClass="input-hint">
+                        <font>
+                            <Font size="11"/>
+                        </font>
+                    </Label>
+                </VBox>
+                
+                <VBox spacing="10">
+                    <Label text="Your Rank" styleClass="input-label">
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
+                    </Label>
+                    <TextField fx:id="yourRankField" promptText="e.g., 150" styleClass="predictor-textfield">
+                        <font>
+                            <Font size="16"/>
+                        </font>
+                    </TextField>
+                    <Label text="Enter your rank in the contest" styleClass="input-hint">
+                        <font>
+                            <Font size="11"/>
+                        </font>
+                    </Label>
+                </VBox>
+                
+                <Button text="Calculate Rating Change" styleClass="predict-button" onAction="#handleCalculate" 
+                        maxWidth="Infinity" prefHeight="50">
+                    <font>
+                        <Font name="System Bold" size="16"/>
+                    </font>
+                </Button>
+            </VBox>
+            
+            <!-- Results Section -->
+            <VBox fx:id="resultsSection" spacing="20" alignment="CENTER" visible="false" styleClass="results-section">
+                <padding>
+                    <Insets top="30" right="40" bottom="30" left="40"/>
+                </padding>
+                
+                <Label text="📊 Prediction Results" styleClass="results-title">
+                    <font>
+                        <Font name="System Bold" size="24"/>
+                    </font>
+                </Label>
+                
+                <HBox spacing="40" alignment="CENTER">
+                    <VBox spacing="10" alignment="CENTER" styleClass="result-card">
+                        <padding>
+                            <Insets top="20" right="30" bottom="20" left="30"/>
+                        </padding>
+                        <Label text="Rating Change" styleClass="result-label">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Label fx:id="ratingChangeLabel" text="+50" styleClass="result-value-positive">
+                            <font><Font name="System Bold" size="32"/></font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox spacing="10" alignment="CENTER" styleClass="result-card">
+                        <padding>
+                            <Insets top="20" right="30" bottom="20" left="30"/>
+                        </padding>
+                        <Label text="New Rating" styleClass="result-label">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Label fx:id="newRatingLabel" text="1050" styleClass="result-value">
+                            <font><Font name="System Bold" size="32"/></font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox spacing="10" alignment="CENTER" styleClass="result-card">
+                        <padding>
+                            <Insets top="20" right="30" bottom="20" left="30"/>
+                        </padding>
+                        <Label text="Performance" styleClass="result-label">
+                            <font><Font name="System Bold" size="14"/></font>
+                        </Label>
+                        <Label fx:id="performanceLabel" text="1100" styleClass="result-value">
+                            <font><Font name="System Bold" size="32"/></font>
+                        </Label>
+                    </VBox>
+                </HBox>
+                
+                <Button text="Apply This Rating" styleClass="apply-button" onAction="#handleApplyRating" prefWidth="250" prefHeight="45">
+                    <font>
+                        <Font name="System Bold" size="14"/>
+                    </font>
+                </Button>
+            </VBox>
+            
+            <!-- Error Label -->
+            <Label fx:id="errorLabel" styleClass="error-label" visible="false" wrapText="true">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Label>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>
