@@ -1,134 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.contestpredictor.controller.RegistrationController"
-            styleClass="login-root" prefWidth="1000" prefHeight="650">
+<BorderPane prefHeight="650" prefWidth="1000" styleClass="login-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.RegistrationController">
     
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scroll-pane">
             <HBox alignment="CENTER" spacing="0">
                 <!-- Left Side - Welcome Panel -->
-                <VBox styleClass="login-left-panel" alignment="CENTER" spacing="20" prefWidth="500">
+                <VBox alignment="CENTER" prefWidth="500" spacing="20" styleClass="login-left-panel">
                     <padding>
-                        <Insets top="40" right="40" bottom="40" left="40"/>
+                        <Insets bottom="40" left="40" right="40" top="40" />
                     </padding>
                 
-                <Label text="📊" styleClass="login-icon">
+                <Label styleClass="login-icon" text="📊">
                     <font>
-                        <Font size="72"/>
+                        <Font size="72" />
                     </font>
                 </Label>
                 
-                <Label text="Contest Rating Predictor" styleClass="login-brand">
+                <Label styleClass="login-brand" text="Contest Rating Predictor">
                     <font>
-                        <Font name="System Bold" size="32"/>
+                        <Font name="System Bold" size="32" />
                     </font>
                 </Label>
                 
-                <Label text="Join us and start tracking your competitive programming journey" 
-                       styleClass="login-tagline" wrapText="true" textAlignment="CENTER" maxWidth="400">
+                <Label maxWidth="400" styleClass="login-tagline" text="Join us and start tracking your competitive programming journey" textAlignment="CENTER" wrapText="true">
                     <font>
-                        <Font size="16"/>
+                        <Font size="16" />
                     </font>
                 </Label>
                 
-                <VBox spacing="15" alignment="CENTER">
-                    <Label text="✓ Track your rating progress" styleClass="feature-text">
-                        <font><Font size="14"/></font>
+                <VBox alignment="CENTER" spacing="15">
+                    <Label styleClass="feature-text" text="✓ Track your rating progress">
+                        <font><Font name="System Bold Italic" size="14.0" /></font>
                     </Label>
-                    <Label text="✓ Predict future ratings" styleClass="feature-text">
-                        <font><Font size="14"/></font>
+                    <Label styleClass="feature-text" text="✓ Predict future ratings">
+                        <font><Font size="14" /></font>
                     </Label>
-                    <Label text="✓ View contest history" styleClass="feature-text">
-                        <font><Font size="14"/></font>
+                    <Label styleClass="feature-text" text="✓ View contest history">
+                        <font><Font size="14" /></font>
                     </Label>
-                    <Label text="✓ Compare with others" styleClass="feature-text">
-                        <font><Font size="14"/></font>
+                    <Label styleClass="feature-text" text="✓ Compare with others">
+                        <font><Font size="14" /></font>
                     </Label>
                 </VBox>
             </VBox>
             
             <!-- Right Side - Registration Form -->
-            <VBox styleClass="login-right-panel" alignment="CENTER" spacing="25" prefWidth="500">
+            <VBox alignment="CENTER" prefWidth="500" spacing="25" styleClass="login-right-panel">
                 <padding>
-                    <Insets top="60" right="60" bottom="60" left="60"/>
+                    <Insets bottom="60" left="60" right="60" top="60" />
                 </padding>
                 
-                <VBox spacing="10" alignment="CENTER">
-                    <Label text="Create Account" styleClass="login-title">
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="login-title" text="Register Account">
                         <font>
-                            <Font name="System Bold" size="28"/>
+                            <Font name="System Bold" size="28" />
                         </font>
                     </Label>
-                    <Label text="Sign up to get started" styleClass="login-subtitle">
+                    <Label styleClass="login-subtitle" text="Sign up to get started">
                         <font>
-                            <Font size="14"/>
+                            <Font size="18.0" />
                         </font>
                     </Label>
                 </VBox>
                 
-                <VBox spacing="20" maxWidth="350">
+                <VBox maxWidth="350" spacing="20">
                     <!-- Full Name Field -->
                     <VBox spacing="8">
-                        <Label text="Full Name" styleClass="field-label">
+                        <Label styleClass="field-label" text="Full Name">
                             <font>
-                                <Font name="System Bold" size="13"/>
+                                <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="fullNameField" promptText="Enter your full name" 
-                                   styleClass="login-textfield">
+                        <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="login-textfield">
                             <font>
-                                <Font size="14"/>
+                                <Font size="14" />
                             </font>
                         </TextField>
                     </VBox>
                     
                     <!-- Username Field -->
                     <VBox spacing="8">
-                        <Label text="Username" styleClass="field-label">
+                        <Label styleClass="field-label" text="Username">
                             <font>
-                                <Font name="System Bold" size="13"/>
+                                <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
-                        <TextField fx:id="usernameField" promptText="Choose a username" 
-                                   styleClass="login-textfield">
+                        <TextField fx:id="usernameField" promptText="Choose a username" styleClass="login-textfield">
                             <font>
-                                <Font size="14"/>
+                                <Font size="15.0" />
                             </font>
                         </TextField>
                     </VBox>
                     
                     <!-- Password Field -->
                     <VBox spacing="8">
-                        <Label text="Password" styleClass="field-label">
+                        <Label styleClass="field-label" text="Password">
                             <font>
-                                <Font name="System Bold" size="13"/>
+                                <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
-                        <PasswordField fx:id="passwordField" promptText="Create a password" 
-                                       styleClass="login-textfield">
+                        <PasswordField fx:id="passwordField" promptText="Create a password" styleClass="login-textfield">
                             <font>
-                                <Font size="14"/>
+                                <Font size="15.0" />
                             </font>
                         </PasswordField>
                     </VBox>
                     
                     <!-- Confirm Password Field -->
                     <VBox spacing="8">
-                        <Label text="Confirm Password" styleClass="field-label">
+                        <Label styleClass="field-label" text="Confirm Password">
                             <font>
-                                <Font name="System Bold" size="13"/>
+                                <Font name="System Bold" size="15.0" />
                             </font>
                         </Label>
-                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" 
-                                       styleClass="login-textfield">
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" styleClass="login-textfield">
                             <font>
-                                <Font size="14"/>
+                                <Font size="15.0" />
                             </font>
                         </PasswordField>
                     </VBox>
@@ -136,30 +136,29 @@
                     <!-- Error/Success Message -->
                     <Label fx:id="messageLabel" styleClass="error-label" visible="false" wrapText="true">
                         <font>
-                            <Font size="12"/>
+                            <Font size="12" />
                         </font>
                     </Label>
                     
                     <!-- Register Button -->
-                    <Button text="Create Account" styleClass="login-button" onAction="#handleRegister" 
-                            maxWidth="Infinity" prefHeight="45">
+                    <Button maxWidth="Infinity" onAction="#handleRegister" prefHeight="45" styleClass="login-button" text="Create Account">
                         <font>
-                            <Font name="System Bold" size="15"/>
+                            <Font name="System Bold" size="18.0" />
                         </font>
                     </Button>
                     
-                    <Separator/>
+                    <Separator />
                     
                     <!-- Already have account link -->
                     <HBox alignment="CENTER" spacing="5">
-                        <Label text="Already have an account?" styleClass="login-subtitle">
+                        <Label styleClass="login-subtitle" text="Already have an account?">
                             <font>
-                                <Font size="13"/>
+                                <Font size="14.0" />
                             </font>
                         </Label>
-                        <Label text="Sign In" styleClass="register-link" onMouseClicked="#handleBackToLogin">
+                        <Label onMouseClicked="#handleBackToLogin" styleClass="register-link" text="Sign In">
                             <font>
-                                <Font name="System Bold" size="13"/>
+                                <Font name="System Bold" size="18.0" />
                             </font>
                         </Label>
                     </HBox>

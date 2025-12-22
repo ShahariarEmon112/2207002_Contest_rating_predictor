@@ -1,177 +1,180 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.contestpredictor.controller.ProfileController"
-            styleClass="profile-root">
+<BorderPane styleClass="profile-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.ProfileController">
     
     <!-- Top Navigation Bar -->
     <top>
-        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="20" prefHeight="70">
+        <HBox alignment="CENTER_LEFT" prefHeight="70" spacing="20" styleClass="navbar">
             <padding>
-                <Insets top="10" right="30" bottom="10" left="30"/>
+                <Insets bottom="10" left="30" right="30" top="10" />
             </padding>
             
-            <Label text="📊 Contest Rating Predictor" styleClass="navbar-brand">
+            <Label styleClass="navbar-brand" text="📊 Contest Rating Predictor">
                 <font>
-                    <Font name="System Bold" size="20"/>
+                    <Font name="System Bold" size="20" />
                 </font>
             </Label>
             
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
             
-            <Button fx:id="searchContestButton" text="Contest" styleClass="navbar-button" onAction="#handleSearchContest">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button fx:id="searchContestButton" onAction="#handleSearchContest" styleClass="navbar-button" text="Contest">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
             
-            <Button text="Predictor" styleClass="navbar-button" onAction="#handlePredictor">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button onAction="#handlePredictor" styleClass="navbar-button" text="Predictor">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
             
-            <Button text="Logout" styleClass="navbar-button-logout" onAction="#handleLogout">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button onAction="#handleLogout" styleClass="navbar-button-logout" text="Logout">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
         </HBox>
     </top>
     
     <!-- Main Content -->
     <center>
-        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="scroll-pane">
-            <VBox spacing="30" alignment="TOP_CENTER" styleClass="profile-content">
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scroll-pane">
+            <VBox alignment="TOP_CENTER" spacing="30" styleClass="profile-content">
                 <padding>
-                    <Insets top="40" right="40" bottom="40" left="40"/>
+                    <Insets bottom="40" left="40" right="40" top="40" />
                 </padding>
                 
                 <!-- Profile Header -->
-                <VBox spacing="15" alignment="CENTER" styleClass="profile-header">
+                <VBox alignment="CENTER" spacing="15" styleClass="profile-header">
                     <padding>
-                    <Insets top="30" right="30" bottom="30" left="30"/>
+                    <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
                 
-                <Label text="👤" styleClass="profile-avatar">
+                <Label styleClass="profile-avatar" text="👤">
                     <font>
-                        <Font size="60"/>
+                        <Font size="72.0" />
                     </font>
                 </Label>
                 
-                <Label fx:id="fullNameLabel" text="User Name" styleClass="profile-name">
+                <Label fx:id="fullNameLabel" styleClass="profile-name" text="User Name">
                     <font>
-                        <Font name="System Bold" size="32"/>
+                        <Font name="System Bold" size="32" />
                     </font>
                 </Label>
                 
-                <Label fx:id="usernameLabel" text="@username" styleClass="profile-username">
+                <Label fx:id="usernameLabel" styleClass="profile-username" text="@username">
                     <font>
-                        <Font size="16"/>
+                        <Font size="16" />
                     </font>
                 </Label>
             </VBox>
             
             <!-- Stats Cards -->
-            <HBox spacing="30" alignment="CENTER">
+            <HBox alignment="CENTER" spacing="30">
                 <!-- Current Rating Card -->
-                <VBox spacing="10" alignment="CENTER" styleClass="stat-card" prefWidth="250" prefHeight="180">
+                <VBox alignment="CENTER" prefHeight="180" prefWidth="250" spacing="10" styleClass="stat-card">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets bottom="20" left="20" right="20" top="20" />
                     </padding>
                     
-                    <Label text="⭐" styleClass="stat-icon">
+                    <Label styleClass="stat-icon" text="⭐">
                         <font>
-                            <Font size="36"/>
+                            <Font size="50.0" />
                         </font>
                     </Label>
                     
-                    <Label text="Current Rating" styleClass="stat-label">
+                    <Label blendMode="SRC_ATOP" styleClass="stat-label" text="Current Rating">
                         <font>
-                            <Font name="System Bold" size="14"/>
+                            <Font name="System Bold" size="28.0" />
                         </font>
                     </Label>
                     
-                    <Label fx:id="ratingLabel" text="1000" styleClass="stat-value">
+                    <Label fx:id="ratingLabel" styleClass="stat-value" text="1000">
                         <font>
-                            <Font name="System Bold" size="36"/>
+                            <Font name="System Bold" size="36" />
                         </font>
                     </Label>
                     
-                    <Label fx:id="ratingColorLabel" text="Gray" styleClass="stat-sublabel">
+                    <Label fx:id="ratingColorLabel" styleClass="stat-sublabel" text="Gray">
                         <font>
-                            <Font size="12"/>
+                            <Font name="System Bold Italic" size="17.0" />
                         </font>
                     </Label>
                 </VBox>
                 
                 <!-- Contests Participated Card -->
-                <VBox spacing="10" alignment="CENTER" styleClass="stat-card" prefWidth="250" prefHeight="180">
+                <VBox alignment="CENTER" prefHeight="180" prefWidth="250" spacing="10" styleClass="stat-card">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets bottom="20" left="20" right="20" top="20" />
                     </padding>
                     
-                    <Label text="🏆" styleClass="stat-icon">
+                    <Label styleClass="stat-icon" text="🏆">
                         <font>
-                            <Font size="36"/>
+                            <Font size="43.0" />
                         </font>
                     </Label>
                     
-                    <Label text="Contests" styleClass="stat-label">
+                    <Label blendMode="GREEN" styleClass="stat-label" text="Contests">
                         <font>
-                            <Font name="System Bold" size="14"/>
+                            <Font name="System Bold" size="31.0" />
                         </font>
                     </Label>
                     
-                    <Label fx:id="contestsLabel" text="0" styleClass="stat-value">
+                    <Label fx:id="contestsLabel" styleClass="stat-value" text="0">
                         <font>
-                            <Font name="System Bold" size="36"/>
+                            <Font name="System Bold" size="36" />
                         </font>
                     </Label>
                     
-                    <Label text="Participated" styleClass="stat-sublabel">
+                    <Label styleClass="stat-sublabel" text="Participated">
                         <font>
-                            <Font size="12"/>
+                            <Font name="System Bold Italic" size="12.0" />
                         </font>
                     </Label>
                 </VBox>
                 
                 <!-- Max Rating Card -->
-                <VBox spacing="10" alignment="CENTER" styleClass="stat-card" prefWidth="250" prefHeight="180">
+                <VBox alignment="CENTER" prefHeight="180" prefWidth="250" spacing="10" styleClass="stat-card">
                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets bottom="20" left="20" right="20" top="20" />
                     </padding>
                     
-                    <Label text="📈" styleClass="stat-icon">
+                    <Label styleClass="stat-icon" text="📈">
                         <font>
-                            <Font size="36"/>
+                            <Font size="44.0" />
                         </font>
                     </Label>
                     
-                    <Label text="Max Rating" styleClass="stat-label">
+                    <Label blendMode="MULTIPLY" styleClass="stat-label" text="Max Rating">
                         <font>
-                            <Font name="System Bold" size="14"/>
+                            <Font name="System Bold" size="29.0" />
                         </font>
                     </Label>
                     
-                    <Label fx:id="maxRatingLabel" text="1000" styleClass="stat-value">
+                    <Label fx:id="maxRatingLabel" styleClass="stat-value" text="1000">
                         <font>
-                            <Font name="System Bold" size="36"/>
+                            <Font name="System Bold" size="36" />
                         </font>
                     </Label>
                     
-                    <Label text="All Time High" styleClass="stat-sublabel">
+                    <Label styleClass="stat-sublabel" text="Highest Ever Reached!">
                         <font>
-                            <Font size="12"/>
+                            <Font name="System Bold Italic" size="12.0" />
                         </font>
                     </Label>
                 </VBox>
             </HBox>
             
             <!-- Quick Actions -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button text="🎯 Predict Rating" styleClass="action-button-primary" onAction="#handlePredictor" prefWidth="200" prefHeight="50">
+            <HBox alignment="CENTER" spacing="20">
+                <Button onAction="#handlePredictor" prefHeight="50" prefWidth="200" styleClass="action-button-primary" text="🎯 Predict Rating">
                     <font>
-                        <Font name="System Bold" size="16"/>
+                        <Font name="System Bold" size="20.0" />
                     </font>
                 </Button>
             </HBox>

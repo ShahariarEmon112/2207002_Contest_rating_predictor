@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.contestpredictor.controller.ContestSearchController"
-            styleClass="dashboard-root">
+<BorderPane styleClass="dashboard-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.ContestSearchController">
     
     <!-- Top Navigation Bar -->
     <top>
-        <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="20" prefHeight="70">
+        <HBox alignment="CENTER_LEFT" prefHeight="70" spacing="20" styleClass="navbar">
             <padding>
-                <Insets top="10" right="30" bottom="10" left="30"/>
+                <Insets bottom="10" left="30" right="30" top="10" />
             </padding>
             
-            <Label text="📊 Contest Rating Predictor" styleClass="navbar-brand">
+            <Label styleClass="navbar-brand" text="📊 Contest Rating Predictor">
                 <font>
-                    <Font name="System Bold" size="20"/>
+                    <Font name="System Bold" size="20" />
                 </font>
             </Label>
             
-            <Region HBox.hgrow="ALWAYS"/>
+            <Region HBox.hgrow="ALWAYS" />
             
-            <Label fx:id="usernameLabel" text="Username" styleClass="username-label">
-                <font><Font name="System Bold" size="14"/></font>
+            <Label fx:id="usernameLabel" styleClass="username-label" text="Username">
+                <font><Font name="System Bold" size="14" /></font>
             </Label>
             
-            <Button text="Predictor" styleClass="navbar-button" onAction="#handlePredictor">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button onAction="#handlePredictor" styleClass="navbar-button" text="Predictor">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
             
-            <Button text="Profile" styleClass="navbar-button" onAction="#handleProfile">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button onAction="#handleProfile" styleClass="navbar-button" text="Profile">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
             
-            <Button text="Logout" styleClass="navbar-button-logout" onAction="#handleLogout">
-                <font><Font name="System Bold" size="14"/></font>
+            <Button onAction="#handleLogout" styleClass="navbar-button-logout" text="Logout">
+                <font><Font name="System Bold" size="14" /></font>
             </Button>
         </HBox>
     </top>
@@ -46,69 +51,68 @@
     <center>
         <VBox spacing="30" styleClass="dashboard-content">
             <padding>
-                <Insets top="40" right="60" bottom="40" left="60"/>
+                <Insets bottom="40" left="60" right="60" top="40" />
             </padding>
             
             <!-- Title Section -->
-            <VBox spacing="10" alignment="CENTER_LEFT">
-                <Label text="🔍 Search Contests" styleClass="page-title">
+            <VBox alignment="CENTER_LEFT" spacing="10">
+                <Label styleClass="page-title" text="🔍 Search Contests">
                     <font>
-                        <Font name="System Bold" size="36"/>
+                        <Font name="System Bold" size="36" />
                     </font>
                 </Label>
-                <Label text="Browse and search for past and upcoming contests" styleClass="page-subtitle">
+                <Label styleClass="page-subtitle" text="Browse and search for past and upcoming contests">
                     <font>
-                        <Font size="16"/>
+                        <Font size="16" />
                     </font>
                 </Label>
             </VBox>
             
             <!-- Search Section -->
-            <VBox spacing="20" styleClass="search-container" maxWidth="900">
+            <VBox maxWidth="900" spacing="20" styleClass="search-container">
                 <padding>
-                    <Insets top="25" right="30" bottom="25" left="30"/>
+                    <Insets bottom="25" left="30" right="30" top="25" />
                 </padding>
                 
-                <HBox spacing="15" alignment="CENTER_LEFT">
+                <HBox alignment="CENTER_LEFT" spacing="15">
                     <!-- Search Field -->
-                    <TextField fx:id="searchField" promptText="Search by contest name or ID..." 
-                               styleClass="search-field" prefWidth="400">
+                    <TextField fx:id="searchField" prefWidth="400" promptText="Search by contest name or ID..." styleClass="search-field">
                         <font>
-                            <Font size="14"/>
+                            <Font size="14" />
                         </font>
                     </TextField>
                     
                     <!-- Filter ComboBox -->
-                    <ComboBox fx:id="filterComboBox" styleClass="search-field" prefWidth="180" style="-fx-font-size: 14px;" />
+                    <ComboBox fx:id="filterComboBox" prefWidth="180" style="-fx-font-size: 14px;" styleClass="search-field" />
                     
                     <!-- Search Button -->
-                    <Button text="🔍 Search" styleClass="search-button" onAction="#handleSearch" prefWidth="120">
+                    <Button onAction="#handleSearch" prefWidth="120" styleClass="search-button" text="🔍 Search">
                         <font>
-                            <Font name="System Bold" size="14"/>
+                            <Font name="System Bold" size="14" />
                         </font>
                     </Button>
                     
                     <!-- Clear Button -->
-                    <Button text="Clear" styleClass="clear-button" onAction="#handleClear" prefWidth="100">
+                    <Button onAction="#handleClear" prefWidth="100" styleClass="clear-button" text="Clear">
                         <font>
-                            <Font name="System Bold" size="14"/>
+                            <Font name="System Bold" size="14" />
                         </font>
                     </Button>
                 </HBox>
                 
                 <!-- Results Count -->
-                <Label fx:id="resultsCountLabel" text="0 contest(s) found" styleClass="page-subtitle">
+                <Label fx:id="resultsCountLabel" styleClass="page-subtitle" text="0 Contests Found!">
                     <font>
-                        <Font size="14"/>
+                        <Font name="System Bold Italic" size="20.0" />
                     </font>
                 </Label>
             </VBox>
             
             <!-- Contests List -->
-            <ScrollPane fitToWidth="true" styleClass="contests-scroll" prefHeight="400">
-                <VBox fx:id="contestsContainer" spacing="20" maxWidth="900">
+            <ScrollPane fitToWidth="true" prefHeight="400" styleClass="contests-scroll">
+                <VBox fx:id="contestsContainer" maxWidth="900" spacing="20">
                     <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
+                        <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                 </VBox>
             </ScrollPane>
