@@ -24,6 +24,10 @@
             
             <Region HBox.hgrow="ALWAYS"/>
             
+            <Button text="Rating Predictor" styleClass="navbar-button" onAction="#handleRatingPredictor">
+                <font><Font name="System Bold" size="14"/></font>
+            </Button>
+            
             <Button fx:id="searchContestButton" text="Contest" styleClass="navbar-button" onAction="#handleSearchContest">
                 <font><Font name="System Bold" size="14"/></font>
             </Button>

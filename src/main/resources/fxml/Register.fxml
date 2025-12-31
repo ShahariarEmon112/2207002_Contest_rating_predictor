@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
@@ -77,6 +78,27 @@
                 </VBox>
                 
                 <VBox maxWidth="350" spacing="20">
+                    <!-- Account Type Selection -->
+                    <VBox spacing="10">
+                        <Label styleClass="field-label" text="Account Type">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="20">
+                            <RadioButton fx:id="contestantRadio" text="Contestant" styleClass="radio-button">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </RadioButton>
+                            <RadioButton fx:id="adminRadio" text="Admin" styleClass="radio-button">
+                                <font>
+                                    <Font size="14" />
+                                </font>
+                            </RadioButton>
+                        </HBox>
+                    </VBox>
+                    
                     <!-- Full Name Field -->
                     <VBox spacing="8">
                         <Label styleClass="field-label" text="Full Name">
@@ -99,6 +121,20 @@
                             </font>
                         </Label>
                         <TextField fx:id="usernameField" promptText="Choose a username" styleClass="login-textfield">
+                            <font>
+                                <Font size="15.0" />
+                            </font>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Email Field (for Admin only) -->
+                    <VBox fx:id="emailBox" spacing="8">
+                        <Label styleClass="field-label" text="Email (Required for Admin)">
+                            <font>
+                                <Font name="System Bold" size="15.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="emailField" promptText="Enter your email" styleClass="login-textfield">
                             <font>
                                 <Font size="15.0" />
                             </font>
