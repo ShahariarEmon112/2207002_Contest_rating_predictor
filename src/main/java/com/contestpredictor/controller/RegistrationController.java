@@ -1,5 +1,6 @@
 package com.contestpredictor.controller;
 
+import com.contestpredictor.data.AdminDatabase;
 import com.contestpredictor.data.UserDatabase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 public class RegistrationController {
@@ -17,6 +20,9 @@ public class RegistrationController {
 
     @FXML
     private TextField usernameField;
+    
+    @FXML
+    private TextField emailField;
 
     @FXML
     private PasswordField passwordField;
@@ -26,17 +32,33 @@ public class RegistrationController {
 
     @FXML
     private Label messageLabel;
+    
+    @FXML
+    private RadioButton contestantRadio;
+    
+    @FXML
+    private RadioButton adminRadio;
+    
+    private ToggleGroup accountTypeGroup;
 
     @FXML
     private void handleRegister() {
         String fullName = fullNameField.getText().trim();
         String username = usernameField.getText().trim();
+        String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
+        boolean isAdmin = adminRadio.isSelected();
 
         // Validate input fields
         if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showError("Please fill in all fields");
+            return;
+        }
+        
+        // Validate email for admin
+        if (isAdmin && email.isEmpty()) {
+            showError("Email is required for admin registration");
             return;
         }
 
@@ -70,23 +92,35 @@ public class RegistrationController {
         }
 
         // Attempt to register the user
-        UserDatabase userDB = UserDatabase.getInstance();
-        boolean success = userDB.registerUser(username, password, fullName);
+        boolean success;
+        if (isAdmin) {
+            AdminDatabase adminDB = AdminDatabase.getInstance();
+            success = adminDB.registerAdmin(username, password, fullName, email);
+            if (success) {
+                showSuccess("Admin account created successfully! Redirecting to login...");
+            } else {
+                showError("Admin username already exists. Please choose another one.");
+            }
+        } else {
+            UserDatabase userDB = UserDatabase.getInstance();
+            success = userDB.registerUser(username, password, fullName);
+            if (success) {
+                showSuccess("Account created successfully! Redirecting to login...");
+            } else {
+                showError("Username already exists. Please choose another one.");
+            }
+        }
 
         if (success) {
-            showSuccess("Account created successfully! Redirecting to profile...");
-            
-            // Navigate to profile after a short delay
+            // Navigate to login after a short delay
             new Thread(() -> {
                 try {
                     Thread.sleep(1500);
-                    javafx.application.Platform.runLater(() -> navigateToProfile());
+                    javafx.application.Platform.runLater(() -> handleBackToLogin());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }).start();
-        } else {
-            showError("Username already exists. Please choose another one.");
         }
     }
 
@@ -96,40 +130,65 @@ public class RegistrationController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             
-            Scene scene = new Scene(root, 1000, 650);
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             
-            Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Login - Contest Rating Predictor");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showError("Error loading login page: " + e.getMessage());
         }
     }
 
-    private void navigateToProfile() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Profile.fxml"));
-            Parent root = loader.load();
-            
-            Scene scene = new Scene(root, 1200, 800);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            
-            Stage stage = (Stage) usernameField.getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("Profile - Contest Rating Predictor");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showError("Error loading profile: " + e.getMessage());
-        }
-    }
-
     @FXML
     private void initialize() {
+        // Setup account type toggle group
+        accountTypeGroup = new ToggleGroup();
+        contestantRadio.setToggleGroup(accountTypeGroup);
+        adminRadio.setToggleGroup(accountTypeGroup);
+        contestantRadio.setSelected(true); // Default to contestant
+        
+        // Email field visibility based on account type
+        emailField.setVisible(false);
+        emailField.setManaged(false);
+        
+        accountTypeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == adminRadio) {
+                emailField.setVisible(true);
+                emailField.setManaged(true);
+            } else {
+                emailField.setVisible(false);
+                emailField.setManaged(false);
+            }
+        });
+        
         // Add enter key handlers for smooth navigation
         fullNameField.setOnAction(event -> usernameField.requestFocus());
-        usernameField.setOnAction(event -> passwordField.requestFocus());
+        usernameField.setOnAction(event -> {
+            if (emailField.isVisible()) {
+                emailField.requestFocus();
+            } else {
+                passwordField.requestFocus();
+            }
+        });
+        emailField.setOnAction(event -> passwordField.requestFocus());
         passwordField.setOnAction(event -> confirmPasswordField.requestFocus());
         confirmPasswordField.setOnAction(event -> handleRegister());
     }

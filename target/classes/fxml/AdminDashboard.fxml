@@ -15,6 +15,8 @@
             <HBox alignment="CENTER_LEFT" spacing="20">
                 <Label text="🛡️ ADMIN DASHBOARD" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
                 <Region HBox.hgrow="ALWAYS"/>
+                <Button text="📊 Manage Standings" onAction="#handleManageStandings" 
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
                 <Label fx:id="adminNameLabel" text="Admin" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
                 <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" 
                         style="-fx-background-color: white; -fx-text-fill: #ff9800; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
@@ -71,7 +73,6 @@
                                 <TableColumn fx:id="contestNameColumn" text="Contest Name" prefWidth="200"/>
                                 <TableColumn fx:id="dateTimeColumn" text="Date & Time" prefWidth="150"/>
                                 <TableColumn fx:id="durationColumn" text="Duration (min)" prefWidth="120"/>
-                                <TableColumn fx:id="registrationsColumn" text="Participants" prefWidth="120"/>
                                 <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
                                 <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
                             </columns>
@@ -80,27 +81,41 @@
                 </VBox>
             </Tab>
             
-            <!-- Tab 2: Contest Info -->
-            <Tab text="ℹ️ Contest Info">
+            <!-- Tab 2: Manage Participants -->
+            <Tab text="👥 Manage Participants">
                 <VBox spacing="15" style="-fx-padding: 20;">
                     
                     <HBox spacing="15" alignment="CENTER_LEFT">
                         <Label text="Select Contest:"/>
-                        <ComboBox fx:id="contestSelector" promptText="Choose a contest" prefWidth="300"/>
-                        <Button text="View Details" onAction="#handleViewRegistrations" styleClass="primary-button"/>
+                        <ComboBox fx:id="participantContestSelector" promptText="Choose a contest" prefWidth="300"/>
+                        <Button text="Load Participants" onAction="#handleLoadParticipants" styleClass="primary-button"/>
                     </HBox>
+                    
+                    <!-- Add Participant Section -->
+                    <VBox spacing="10" style="-fx-background-color: #e8f5e9; -fx-padding: 15; -fx-background-radius: 5;">
+                        <Label text="Add Participant to Contest" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="Username:"/>
+                            <TextField fx:id="addParticipantUsernameField" promptText="Enter username" prefWidth="200"/>
+                            <Button text="Add Participant" onAction="#handleAddParticipant" styleClass="primary-button"/>
+                        </HBox>
+                        <Label fx:id="addParticipantStatusLabel" text="" style="-fx-text-fill: #4CAF50;"/>
+                    </VBox>
                     
                     <VBox spacing="10" VBox.vgrow="ALWAYS">
                         <HBox spacing="20" alignment="CENTER_LEFT">
-                            <Label text="Contest Information" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                            <Label fx:id="registrationCountLabel" text="(Select a contest)" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
+                            <Label text="Contest Participants" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                            <Label fx:id="participantCountLabel" text="(0 participants)" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
                         </HBox>
                         
-                        <TableView fx:id="registrationsTable" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="participantsTable" VBox.vgrow="ALWAYS">
                             <columns>
-                                <TableColumn fx:id="usernameColumn" text="Username" prefWidth="200"/>
-                                <TableColumn fx:id="registeredAtColumn" text="Info" prefWidth="200"/>
-                                <TableColumn fx:id="userActionsColumn" text="Actions" prefWidth="150"/>
+                                <TableColumn fx:id="participantUsernameColumn" text="Username" prefWidth="150"/>
+                                <TableColumn fx:id="participantRatingColumn" text="Current Rating" prefWidth="120"/>
+                                <TableColumn fx:id="participantSolvedColumn" text="Problems Solved" prefWidth="130"/>
+                                <TableColumn fx:id="participantPenaltyColumn" text="Penalty" prefWidth="100"/>
+                                <TableColumn fx:id="participantRankColumn" text="Rank" prefWidth="80"/>
+                                <TableColumn fx:id="participantActionsColumn" text="Actions" prefWidth="120"/>
                             </columns>
                         </TableView>
                     </VBox>
@@ -129,14 +144,14 @@
                         
                         <!-- Stat Card 3 -->
                         <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #ff9800; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                            <Label text="Active Contests" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="activeContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
+                            <Label text="Future Contests" style="-fx-text-fill: white; -fx-font-size: 16;"/>
+                            <Label fx:id="futureContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
                         </VBox>
                         
                         <!-- Stat Card 4 -->
                         <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #9C27B0; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <Label text="System Status" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="totalRegistrationsLabel" text="OK" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
+                            <Label text="Total Participants" style="-fx-text-fill: white; -fx-font-size: 16;"/>
+                            <Label fx:id="totalParticipantsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
                         </VBox>
                     </GridPane>
                     

@@ -34,6 +34,49 @@ public class LoginController {
             return;
         }
 
+        // Check if admin login
+        AdminDatabase adminDB = AdminDatabase.getInstance();
+        Admin admin = adminDB.authenticate(username, password);
+        
+        if (admin != null) {
+            // Admin login successful - navigate to admin dashboard
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                Parent root = loader.load();
+                
+                AdminDashboardController controller = loader.getController();
+                controller.setAdmin(admin);
+                
+                Stage stage = (Stage) usernameField.getScene().getWindow();
+                
+                // Preserve window state
+                boolean wasFullScreen = stage.isFullScreen();
+                boolean wasMaximized = stage.isMaximized();
+                double currentWidth = stage.getWidth();
+                double currentHeight = stage.getHeight();
+                
+                Scene scene = new Scene(root, currentWidth, currentHeight);
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                
+                stage.setScene(scene);
+                stage.setTitle("Admin Dashboard - Contest Rating Predictor");
+                
+                // Restore window state
+                if (wasMaximized) {
+                    stage.setMaximized(true);
+                }
+                if (wasFullScreen) {
+                    stage.setFullScreen(true);
+                }
+                return;
+            } catch (Exception e) {
+                e.printStackTrace();
+                showError("Error loading admin dashboard: " + e.getMessage());
+                return;
+            }
+        }
+        
+        // Check user login
         UserDatabase userDB = UserDatabase.getInstance();
         User user = userDB.authenticate(username, password);
 
@@ -70,59 +113,6 @@ public class LoginController {
             }
         } else {
             showError("Invalid username or password");
-        }
-    }
-    
-    @FXML
-    private void handleAdminLogin() {
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText();
-
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Please enter both username and password");
-            return;
-        }
-
-        AdminDatabase adminDB = AdminDatabase.getInstance();
-        Admin admin = adminDB.authenticate(username, password);
-
-        if (admin != null) {
-            // Admin login successful - navigate to admin dashboard
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                Parent root = loader.load();
-                
-                // Pass admin data to controller
-                AdminDashboardController controller = loader.getController();
-                controller.setAdmin(admin);
-                
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                
-                // Preserve window state
-                boolean wasFullScreen = stage.isFullScreen();
-                boolean wasMaximized = stage.isMaximized();
-                double currentWidth = stage.getWidth();
-                double currentHeight = stage.getHeight();
-                
-                Scene scene = new Scene(root, currentWidth, currentHeight);
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                
-                stage.setScene(scene);
-                stage.setTitle("Admin Dashboard - Contest Rating Predictor");
-                
-                // Restore window state
-                if (wasMaximized) {
-                    stage.setMaximized(true);
-                }
-                if (wasFullScreen) {
-                    stage.setFullScreen(true);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                showError("Error loading admin dashboard: " + e.getMessage());
-            }
-        } else {
-            showError("Invalid admin credentials");
         }
     }
 

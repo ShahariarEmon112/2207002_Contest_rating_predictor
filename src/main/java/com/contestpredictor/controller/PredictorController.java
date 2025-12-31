@@ -189,6 +189,17 @@ public class PredictorController {
             e.printStackTrace();
         }
     }
+    
+    @FXML
+    private void handleRatingPredictor() {
+        System.out.println("=== PredictorController: Rating Predictor button clicked ===");
+        try {
+            navigateTo("/fxml/RatingPredictor.fxml", "Rating Predictor");
+        } catch (Exception e) {
+            System.err.println("ERROR in handleRatingPredictor:");
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void handleSearchContest() {
@@ -229,14 +240,28 @@ public class PredictorController {
             Parent root = loader.load();
             System.out.println("FXML loaded successfully");
             
-            int width = fxmlPath.contains("Login") ? 1000 : 1200;
-            int height = fxmlPath.contains("Login") ? 650 : 800;
-            Scene scene = new Scene(root, width, height);
+            Stage stage = (Stage) currentRatingLabel.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             
-            Stage stage = (Stage) currentRatingLabel.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle(title + " - Contest Rating Predictor");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+            
             System.out.println("Navigation completed successfully");
         } catch (Exception e) {
             System.err.println("ERROR in navigateTo:");

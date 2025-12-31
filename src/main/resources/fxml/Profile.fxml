@@ -177,6 +177,11 @@
                         <Font name="System Bold" size="20.0" />
                     </font>
                 </Button>
+                <Button onAction="#handleViewStandings" prefHeight="50" prefWidth="200" styleClass="action-button-primary" text="📊 View Standings">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Button>
             </HBox>
             </VBox>
         </ScrollPane>

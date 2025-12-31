@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.contestpredictor.controller.ContestStandingsController"
+      spacing="20" styleClass="root-container">
+    
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+    
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label text="Contest Standings" styleClass="page-title">
+            <font>
+                <Font name="System Bold" size="28"/>
+            </font>
+        </Label>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <Button fx:id="backButton" text="← Back" onAction="#handleBack" 
+                styleClass="secondary-button"/>
+    </HBox>
+    
+    <!-- Contest Selection -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label text="Select Contest:" styleClass="label-bold">
+            <font>
+                <Font size="14"/>
+            </font>
+        </Label>
+        <ComboBox fx:id="contestSelector" onAction="#handleContestSelection" 
+                  prefWidth="400" promptText="Choose a contest"/>
+        <Button text="Register Me" fx:id="registerButton" onAction="#handleRegisterForContest" 
+                styleClass="secondary-button"/>
+        <Button text="Refresh" fx:id="refreshButton" onAction="#handleRefresh" 
+                styleClass="secondary-button"/>
+        <Button text="Generate Contest Results" fx:id="generateContestButton" 
+                onAction="#handleGenerateContest" styleClass="primary-button"/>
+    </HBox>
+    
+    <!-- Contest Info -->
+    <VBox spacing="10" styleClass="info-box">
+        <padding>
+            <Insets top="15" right="20" bottom="15" left="20"/>
+        </padding>
+        <Label fx:id="contestTitleLabel" text="Contest Title" styleClass="contest-title">
+            <font>
+                <Font name="System Bold" size="20"/>
+            </font>
+        </Label>
+        <Label fx:id="contestInfoLabel" text="Contest Information" styleClass="contest-info">
+            <font>
+                <Font size="13"/>
+            </font>
+        </Label>
+    </VBox>
+    
+    <!-- Instructions -->
+    <HBox styleClass="info-banner">
+        <padding>
+            <Insets top="10" right="15" bottom="10" left="15"/>
+        </padding>
+        <Label text="💡 Tip: Double-click on 'Solved' or 'Penalty' cells to edit values. Click 'Generate Contest Results' to calculate rankings and ratings." 
+               wrapText="true" styleClass="info-text">
+            <font>
+                <Font size="12"/>
+            </font>
+        </Label>
+    </HBox>
+    
+    <!-- Standings Table -->
+    <TableView fx:id="standingsTable" VBox.vgrow="ALWAYS" styleClass="data-table">
+        <columns>
+            <TableColumn fx:id="rankColumn" text="Rank" prefWidth="60" minWidth="50"/>
+            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="150" minWidth="100"/>
+            <TableColumn fx:id="currentRatingColumn" text="Current Rating" prefWidth="120" minWidth="100"/>
+            <TableColumn fx:id="solvedColumn" text="Solved" prefWidth="80" minWidth="60"/>
+            <TableColumn fx:id="penaltyColumn" text="Penalty" prefWidth="80" minWidth="60"/>
+            <TableColumn fx:id="predictedRatingColumn" text="New Rating" prefWidth="120" minWidth="100"/>
+            <TableColumn fx:id="ratingChangeColumn" text="Change" prefWidth="80" minWidth="60"/>
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100" minWidth="80"/>
+        </columns>
+        <placeholder>
+            <Label text="No participants yet. Select a contest and click 'Generate Contest Results' to populate."/>
+        </placeholder>
+    </TableView>
+    
+</VBox>

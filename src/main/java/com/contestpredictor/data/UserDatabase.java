@@ -115,6 +115,14 @@ public class UserDatabase {
     public Map<String, User> getAllUsers() {
         return users;
     }
+    
+    public User getUser(String username) {
+        return users.get(username);
+    }
+    
+    public User getUserByUsername(String username) {
+        return users.get(username);
+    }
 
     public void logout() {
         currentUser = null;

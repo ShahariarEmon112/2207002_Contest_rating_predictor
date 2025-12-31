@@ -52,13 +52,37 @@ public class DatabaseManager {
                     "rating_history TEXT" + // Stored as comma-separated values
                     ")");
 
-            // Contests table
+            // Admins table
+            stmt.execute("CREATE TABLE IF NOT EXISTS admins (" +
+                    "admin_id TEXT PRIMARY KEY," +
+                    "username TEXT UNIQUE NOT NULL," +
+                    "password TEXT NOT NULL," +
+                    "email TEXT," +
+                    "full_name TEXT NOT NULL," +
+                    "created_at TEXT NOT NULL," +
+                    "is_active INTEGER DEFAULT 1" + // 0 = false, 1 = true
+                    ")");
+
+            // Contests table (enhanced with admin support)
             stmt.execute("CREATE TABLE IF NOT EXISTS contests (" +
                     "contest_id TEXT PRIMARY KEY," +
                     "contest_name TEXT NOT NULL," +
                     "date_time TEXT NOT NULL," +
                     "duration INTEGER NOT NULL," +
-                    "is_past INTEGER NOT NULL" + // 0 = false, 1 = true
+                    "is_past INTEGER NOT NULL," + // 0 = false, 1 = true
+                    "created_by_admin TEXT," +
+                    "max_participants INTEGER DEFAULT 1000," +
+                    "registration_open INTEGER DEFAULT 1" + // 0 = false, 1 = true
+                    ")");
+
+            // Contest registrations table
+            stmt.execute("CREATE TABLE IF NOT EXISTS contest_registrations (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "contest_id TEXT NOT NULL," +
+                    "username TEXT NOT NULL," +
+                    "registered_at TEXT NOT NULL," +
+                    "FOREIGN KEY (contest_id) REFERENCES contests(contest_id)," +
+                    "UNIQUE(contest_id, username)" +
                     ")");
 
             // Participants table
@@ -75,11 +99,53 @@ public class DatabaseManager {
                     "FOREIGN KEY (contest_id) REFERENCES contests(contest_id)" +
                     ")");
 
+            // Rating history table
+            stmt.execute("CREATE TABLE IF NOT EXISTS rating_history (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "contest_id TEXT NOT NULL," +
+                    "username TEXT NOT NULL," +
+                    "old_rating INTEGER NOT NULL," +
+                    "new_rating INTEGER NOT NULL," +
+                    "delta INTEGER NOT NULL," +
+                    "contest_date TEXT NOT NULL," +
+                    "FOREIGN KEY (contest_id) REFERENCES contests(contest_id)" +
+                    ")");
+            
+            // Create default admin if not exists
+            createDefaultAdmin();
+
             stmt.close();
             System.out.println("Database tables initialized successfully");
         } catch (SQLException e) {
             System.err.println("Failed to initialize tables: " + e.getMessage());
             e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Create default admin account
+     */
+    private void createDefaultAdmin() {
+        String checkSql = "SELECT COUNT(*) FROM admins WHERE username = 'admin'";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkSql)) {
+            
+            if (rs.next() && rs.getInt(1) == 0) {
+                String insertSql = "INSERT INTO admins (admin_id, username, password, email, full_name, created_at, is_active) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                try (PreparedStatement pstmt = connection.prepareStatement(insertSql)) {
+                    pstmt.setString(1, "ADMIN_DEFAULT");
+                    pstmt.setString(2, "admin");
+                    pstmt.setString(3, "admin1234"); // In production, this should be hashed
+                    pstmt.setString(4, "admin@contestpredictor.com");
+                    pstmt.setString(5, "System Administrator");
+                    pstmt.setString(6, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                    pstmt.setInt(7, 1);
+                    pstmt.executeUpdate();
+                    System.out.println("Default admin account created (username: admin, password: admin1234)");
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to create default admin: " + e.getMessage());
         }
     }
 
@@ -165,6 +231,32 @@ public class DatabaseManager {
             saveParticipants(contest);
         } catch (SQLException e) {
             System.err.println("Failed to save contest: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Save a contest with admin support (enhanced version)
+     */
+    public void saveContestWithAdmin(Contest contest) {
+        String sql = "INSERT OR REPLACE INTO contests (contest_id, contest_name, date_time, duration, is_past, created_by_admin, max_participants, registration_open) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contest.getContestId());
+            pstmt.setString(2, contest.getContestName());
+            pstmt.setString(3, contest.getDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            pstmt.setInt(4, contest.getDuration());
+            pstmt.setInt(5, contest.isPast() ? 1 : 0);
+            pstmt.setString(6, contest.getCreatedByAdmin());
+            pstmt.setInt(7, contest.getMaxParticipants());
+            pstmt.setInt(8, contest.isRegistrationOpen() ? 1 : 0);
+            
+            pstmt.executeUpdate();
+            
+            // Save participants if any
+            if (contest.getParticipants() != null && !contest.getParticipants().isEmpty()) {
+                saveParticipants(contest);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to save contest with admin: " + e.getMessage());
         }
     }
 
@@ -290,6 +382,160 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("Failed to check contests: " + e.getMessage());
         }
+        return false;
+    }
+    
+    /**
+     * Get participants by contest ID
+     */
+    public List<Participant> getParticipantsByContest(String contestId) {
+        List<Participant> participants = new ArrayList<>();
+        String sql = "SELECT * FROM participants WHERE contest_id = ? ORDER BY rank ASC";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Participant p = new Participant(
+                    rs.getString("username"),
+                    rs.getInt("current_rating"),
+                    rs.getInt("problems_solved"),
+                    rs.getInt("total_penalty")
+                );
+                p.setRank(rs.getInt("rank"));
+                p.setPredictedRating(rs.getInt("predicted_rating"));
+                p.setRatingChange(rs.getInt("rating_change"));
+                
+                participants.add(p);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get participants: " + e.getMessage());
+        }
+        
+        return participants;
+    }
+    
+    /**
+     * Save a single participant to a contest
+     */
+    public boolean saveParticipant(String contestId, Participant participant) {
+        String sql = "INSERT INTO participants (contest_id, username, current_rating, problems_solved, total_penalty, rank, predicted_rating, rating_change) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            pstmt.setString(2, participant.getUsername());
+            pstmt.setInt(3, participant.getCurrentRating());
+            pstmt.setInt(4, participant.getProblemsSolved());
+            pstmt.setInt(5, participant.getTotalPenalty());
+            pstmt.setInt(6, participant.getRank());
+            pstmt.setInt(7, participant.getPredictedRating());
+            pstmt.setInt(8, participant.getRatingChange());
+            
+            pstmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("Failed to save participant: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Remove a participant from a contest
+     */
+    public boolean removeParticipant(String contestId, String username) {
+        String sql = "DELETE FROM participants WHERE contest_id = ? AND username = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            pstmt.setString(2, username);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Failed to remove participant: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Update participant's solve count and penalty
+     */
+    public boolean updateParticipantSolveCount(String contestId, String username, int problemsSolved, int totalPenalty) {
+        String sql = "UPDATE participants SET problems_solved = ?, total_penalty = ? WHERE contest_id = ? AND username = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, problemsSolved);
+            pstmt.setInt(2, totalPenalty);
+            pstmt.setString(3, contestId);
+            pstmt.setString(4, username);
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Failed to update participant solve count: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Register a user for a contest
+     */
+    public boolean registerUserForContest(String contestId, String username) {
+        String sql = "INSERT OR IGNORE INTO contest_registrations (contest_id, username, registered_at) VALUES (?, ?, ?)";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            pstmt.setString(2, username);
+            pstmt.setString(3, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println("Failed to register user for contest: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Get all registered users for a contest
+     */
+    public List<String> getRegisteredUsers(String contestId) {
+        List<String> users = new ArrayList<>();
+        String sql = "SELECT username FROM contest_registrations WHERE contest_id = ? ORDER BY registered_at";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                users.add(rs.getString("username"));
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get registered users: " + e.getMessage());
+        }
+        
+        return users;
+    }
+    
+    /**
+     * Check if user is registered for contest
+     */
+    public boolean isUserRegisteredForContest(String contestId, String username) {
+        String sql = "SELECT COUNT(*) FROM contest_registrations WHERE contest_id = ? AND username = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, contestId);
+            pstmt.setString(2, username);
+            
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to check user registration: " + e.getMessage());
+        }
+        
         return false;
     }
 

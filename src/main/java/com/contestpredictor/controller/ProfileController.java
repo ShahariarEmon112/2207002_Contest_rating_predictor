@@ -120,6 +120,47 @@ public class ProfileController {
         navigateTo("/fxml/Login.fxml", "Login");
     }
     
+    @FXML
+    private void handleViewStandings() {
+        System.out.println("=== ProfileController: View Standings button clicked ===");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ContestStandings.fxml"));
+            Parent root = loader.load();
+            
+            ContestStandingsController controller = loader.getController();
+            UserDatabase userDB = UserDatabase.getInstance();
+            User currentUser = userDB.getCurrentUser();
+            if (currentUser != null) {
+                controller.setCurrentUser(currentUser.getUsername(), false);
+            }
+            
+            Stage stage = (Stage) fullNameLabel.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setTitle("Contest Standings - Contest Rating Predictor");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+        } catch (Exception e) {
+            System.err.println("ERROR in handleViewStandings:");
+            e.printStackTrace();
+        }
+    }
+    
     private void navigateTo(String fxmlPath, String title) {
         try {
             System.out.println("ProfileController: Navigating to " + fxmlPath);
@@ -136,14 +177,28 @@ public class ProfileController {
             Parent root = loader.load();
             System.out.println("FXML loaded successfully");
             
-            int width = fxmlPath.contains("Login") ? 1000 : 1200;
-            int height = fxmlPath.contains("Login") ? 650 : 800;
-            Scene scene = new Scene(root, width, height);
+            Stage stage = (Stage) fullNameLabel.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             
-            Stage stage = (Stage) fullNameLabel.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle(title + " - Contest Rating Predictor");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+            
             System.out.println("Navigation completed successfully");
         } catch (Exception e) {
             System.err.println("ERROR in navigateTo:");

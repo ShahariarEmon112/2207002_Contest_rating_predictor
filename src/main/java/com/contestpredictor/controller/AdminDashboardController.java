@@ -402,6 +402,41 @@ public class AdminDashboardController {
     }
     
     @FXML
+    private void handleManageStandings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ContestStandings.fxml"));
+            Parent root = loader.load();
+            
+            ContestStandingsController controller = loader.getController();
+            controller.setCurrentUser(currentAdmin.getUsername(), true);
+            
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("Contest Standings - Admin");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to open standings manager: " + e.getMessage());
+        }
+    }
+    
+    @FXML
     private void handleLogout() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));

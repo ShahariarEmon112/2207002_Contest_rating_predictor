@@ -265,4 +265,67 @@ public class ContestDatabase {
     public List<Contest> getAllContests() {
         return contests;
     }
+    
+    /**
+     * Save contest created by admin
+     */
+    public boolean saveContestWithAdmin(Contest contest) {
+        try {
+            // Check if contest ID already exists
+            if (getContestById(contest.getContestId()) != null) {
+                return false;
+            }
+            
+            contests.add(contest);
+            dbManager.saveContestWithAdmin(contest);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Failed to save contest: " + e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Delete a contest by ID
+     */
+    public boolean deleteContest(String contestId) {
+        try {
+            // Remove from in-memory list
+            Contest toRemove = null;
+            for (Contest contest : contests) {
+                if (contest.getContestId().equals(contestId)) {
+                    toRemove = contest;
+                    break;
+                }
+            }
+            
+            if (toRemove != null) {
+                contests.remove(toRemove);
+                
+                // Delete from database
+                String sql = "DELETE FROM contests WHERE contest_id = ?";
+                java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:contest_predictor.db");
+                java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, contestId);
+                pstmt.executeUpdate();
+                pstmt.close();
+                
+                // Also delete participants
+                sql = "DELETE FROM participants WHERE contest_id = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, contestId);
+                pstmt.executeUpdate();
+                pstmt.close();
+                conn.close();
+                
+                return true;
+            }
+            
+            return false;
+        } catch (Exception e) {
+            System.err.println("Failed to delete contest: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
