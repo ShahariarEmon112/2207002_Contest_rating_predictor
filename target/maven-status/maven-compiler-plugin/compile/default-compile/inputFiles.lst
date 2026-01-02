@@ -1,5 +1,6 @@
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\data\UserDatabase.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\ContestSearchController.java
+C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\AdminLoginController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\PredictorController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\Contestant.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\User.java
@@ -9,6 +10,7 @@ C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\ma
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\Main.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\RatingPredictorController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\util\AdminSetup.java
+C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\ContestStandingsController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\RegistrationController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\LoginController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\util\RatingPredictor.java

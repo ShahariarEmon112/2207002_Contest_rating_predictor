@@ -38,13 +38,18 @@
                         <Label text="Create New Contest" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
                         
                         <GridPane hgap="15" vgap="10">
+                            <columnConstraints>
+                                <ColumnConstraints minWidth="150" prefWidth="150"/>
+                                <ColumnConstraints minWidth="300" prefWidth="300"/>
+                            </columnConstraints>
+                            
                             <Label text="Contest ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                             <TextField fx:id="contestIdField" promptText="e.g., CONTEST_001" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
                             
                             <Label text="Contest Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                             <TextField fx:id="contestNameField" promptText="e.g., Weekly Contest #1" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="300"/>
                             
-                            <Label text="Date & Time:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                            <Label text="Date and Time:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                             <DatePicker fx:id="contestDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="300"/>
                             
                             <Label text="Duration (minutes):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>

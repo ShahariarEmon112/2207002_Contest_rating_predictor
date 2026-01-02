@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="650" prefWidth="1000" styleClass="login-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.AdminLoginController">
+    
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scroll-pane">
+            <HBox alignment="CENTER" spacing="0">
+                <!-- Left Side - Admin Panel -->
+                <VBox alignment="CENTER" prefWidth="500" spacing="20" styleClass="admin-login-left-panel">
+                    <padding>
+                        <Insets bottom="40" left="40" right="40" top="40" />
+                    </padding>
+                
+                <Label styleClass="admin-icon" text="🔐">
+                    <font>
+                        <Font size="72" />
+                    </font>
+                </Label>
+                
+                <Label styleClass="admin-brand" text="Admin Portal">
+                    <font>
+                        <Font name="System Bold" size="36" />
+                    </font>
+                </Label>
+                
+                <Label maxWidth="400" styleClass="admin-tagline" text="Secure Administration Access" textAlignment="CENTER" wrapText="true">
+                    <font>
+                        <Font size="18" />
+                    </font>
+                </Label>
+                
+                <VBox alignment="CENTER" spacing="15">
+                    <Label alignment="CENTER" styleClass="admin-feature-text" text="⚠️ Authorized Personnel Only">
+                        <font><Font name="System Bold" size="15" /></font>
+                    </Label>
+                    <Label alignment="CENTER" styleClass="admin-feature-text" text="✓ Manage Users">
+                        <font><Font size="14" /></font>
+                    </Label>
+                    <Label alignment="CENTER" styleClass="admin-feature-text" text="✓ Contest Management">
+                        <font><Font size="14" /></font>
+                    </Label>
+                    <Label alignment="CENTER" styleClass="admin-feature-text" text="✓ System Analytics">
+                        <font><Font size="14" /></font>
+                    </Label>
+                </VBox>
+            </VBox>
+            
+            <!-- Right Side - Admin Login Form -->
+            <VBox alignment="CENTER" prefWidth="500" spacing="25" styleClass="admin-login-right-panel">
+                <padding>
+                    <Insets bottom="60" left="60" right="60" top="60" />
+                </padding>
+                
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="admin-login-title" text="Admin Access">
+                        <font>
+                            <Font name="System Bold" size="32" />
+                        </font>
+                    </Label>
+                    <Label styleClass="admin-login-subtitle" text="Enter administrator credentials">
+                        <font>
+                            <Font size="14" />
+                        </font>
+                    </Label>
+                </VBox>
+                
+                <VBox maxWidth="350" spacing="20">
+                    <!-- Username Field -->
+                    <VBox spacing="8">
+                        <Label styleClass="field-label" text="Admin Username">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="usernameField" alignment="CENTER" promptText="Enter admin username" styleClass="admin-textfield">
+                            <font>
+                                <Font size="14" />
+                            </font>
+                        </TextField>
+                    </VBox>
+                    
+                    <!-- Password Field -->
+                    <VBox spacing="8">
+                        <Label styleClass="field-label" text="Admin Password">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <PasswordField fx:id="passwordField" alignment="CENTER" promptText="Enter admin password" styleClass="admin-textfield">
+                            <font>
+                                <Font size="14" />
+                            </font>
+                        </PasswordField>
+                    </VBox>
+                    
+                    <!-- Error Label -->
+                    <Label fx:id="errorLabel" styleClass="error-label" textAlignment="CENTER" wrapText="true">
+                        <font>
+                            <Font size="13" />
+                        </font>
+                    </Label>
+                    
+                    <!-- Login Button -->
+                    <Button defaultButton="true" maxWidth="Infinity" onAction="#handleAdminLogin" prefHeight="45.0" styleClass="admin-login-button" text="LOGIN AS ADMIN">
+                        <font>
+                            <Font name="System Bold" size="15" />
+                        </font>
+                    </Button>
+                    
+                    <!-- Back to User Login -->
+                    <VBox alignment="CENTER" spacing="10">
+                        <Label styleClass="link-label" text="Not an administrator?">
+                            <font>
+                                <Font size="13" />
+                            </font>
+                        </Label>
+                        <Button onAction="#handleGoToUserLogin" styleClass="link-button" text="← Back to User Login">
+                            <font>
+                                <Font size="13" />
+                            </font>
+                        </Button>
+                    </VBox>
+                </VBox>
+                
+                <!-- Security Notice -->
+                <VBox alignment="CENTER" maxWidth="350" spacing="8">
+                    <Label styleClass="security-notice" text="🔒 Secure Connection" textAlignment="CENTER">
+                        <font>
+                            <Font size="12" />
+                        </font>
+                    </Label>
+                    <Label styleClass="security-notice" text="All admin actions are logged and monitored" textAlignment="CENTER" wrapText="true">
+                        <font>
+                            <Font size="11" />
+                        </font>
+                    </Label>
+                </VBox>
+            </VBox>
+        </HBox>
+    </ScrollPane>
+</center>
+</BorderPane>
