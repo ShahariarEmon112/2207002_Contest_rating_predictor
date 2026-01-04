@@ -1,170 +1,278 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
             fx:controller="com.contestpredictor.controller.AdminDashboardController"
-            stylesheets="@../css/styles.css">
+            styleClass="main-container" stylesheets="@../css/styles.css">
     
-    <!-- Top Section: Admin Info and Actions -->
+    <!-- Top Header -->
     <top>
-        <VBox spacing="15" style="-fx-background-color: #ff9800; -fx-padding: 20;">
-            <HBox alignment="CENTER_LEFT" spacing="20">
-                <Label text="🛡️ ADMIN DASHBOARD" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Button text="📊 Manage Standings" onAction="#handleManageStandings" 
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
-                <Label fx:id="adminNameLabel" text="Admin" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
-                <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" 
-                        style="-fx-background-color: white; -fx-text-fill: #ff9800; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
-            </HBox>
-            <Label text="Contest Manager &amp; Controller" style="-fx-text-fill: white; -fx-font-size: 14;"/>
-        </VBox>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #ff9800; -fx-padding: 15 20;">
+            <Button text="← Back" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5; -fx-cursor: hand;"/>
+            <Label text="🏆 Admin Dashboard" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="adminNameLabel" text="Admin: " style="-fx-text-fill: white; -fx-font-size: 14;"/>
+            <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: white; -fx-text-fill: #ff9800; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
+        </HBox>
     </top>
     
-    <!-- Center: TabPane for different admin functions -->
+    <!-- Left Sidebar Navigation -->
+    <left>
+        <VBox spacing="5" style="-fx-background-color: #2c3e50; -fx-padding: 20 10;" prefWidth="220">
+            <Label text="NAVIGATION" style="-fx-text-fill: #95a5a6; -fx-font-size: 11; -fx-font-weight: bold;"/>
+            
+            <Button fx:id="dashboardBtn" text="📊 Dashboard" onAction="#showDashboard" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            <Button fx:id="contestsBtn" text="🏆 Selection Contests" onAction="#showContests" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            <Button fx:id="subContestsBtn" text="📋 Sub-Contests" onAction="#showSubContests" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            <Button fx:id="registrationsBtn" text="👥 Registrations" onAction="#showRegistrations" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            <Button fx:id="standingsBtn" text="🏅 Standings" onAction="#showStandings" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            <Button fx:id="auditLogsBtn" text="📝 Audit Logs" onAction="#showAuditLogs" 
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand; -fx-alignment: CENTER_LEFT;" maxWidth="Infinity"/>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            
+            <Label text="QUICK ACTIONS" style="-fx-text-fill: #95a5a6; -fx-font-size: 11; -fx-font-weight: bold;"/>
+            <Button text="➕ New Contest" onAction="#handleCreateContest" 
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 5;" maxWidth="Infinity"/>
+            <Button text="🔄 Refresh Data" onAction="#handleRefreshData" 
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 13; -fx-cursor: hand; -fx-background-radius: 5;" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+    
+    <!-- Main Content Area -->
     <center>
-        <TabPane tabClosingPolicy="UNAVAILABLE">
-            
-            <!-- Tab 1: Manage Contests -->
-            <Tab text="📅 Manage Contests">
-                <VBox spacing="15" style="-fx-padding: 20;">
-                    
-                    <!-- Create Contest Section -->
-                    <VBox spacing="10" style="-fx-background-color: #f5f5f5; -fx-padding: 15; -fx-background-radius: 5;">
-                        <Label text="Create New Contest" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                        
-                        <GridPane hgap="15" vgap="10">
-                            <columnConstraints>
-                                <ColumnConstraints minWidth="150" prefWidth="150"/>
-                                <ColumnConstraints minWidth="300" prefWidth="300"/>
-                            </columnConstraints>
-                            
-                            <Label text="Contest ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                            <TextField fx:id="contestIdField" promptText="e.g., CONTEST_001" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
-                            
-                            <Label text="Contest Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <TextField fx:id="contestNameField" promptText="e.g., Weekly Contest #1" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="300"/>
-                            
-                            <Label text="Date and Time:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                            <DatePicker fx:id="contestDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="300"/>
-                            
-                            <Label text="Duration (minutes):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                            <TextField fx:id="durationField" promptText="e.g., 120" GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="300"/>
-                            
-                            <Label text="Max Participants:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                            <TextField fx:id="maxParticipantsField" promptText="e.g., 1000" GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="300"/>
-                            
-                            <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                <Button fx:id="createContestButton" text="Create Contest" onAction="#handleCreateContest" 
-                                        styleClass="primary-button"/>
-                                <Button text="Clear Form" onAction="#handleClearForm"/>
-                            </HBox>
-                        </GridPane>
-                        
-                        <Label fx:id="contestStatusLabel" text="" style="-fx-text-fill: #4CAF50;"/>
+        <StackPane fx:id="contentArea">
+            <!-- Dashboard View (Default) -->
+            <VBox fx:id="dashboardView" spacing="20" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <!-- Stats Cards Row -->
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox style="-fx-background-color: #3498db; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS" alignment="CENTER">
+                        <Label text="Selection Contests" style="-fx-text-fill: white; -fx-font-size: 12;"/>
+                        <Label fx:id="totalContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="Total Created" style="-fx-text-fill: #bdc3c7; -fx-font-size: 11;"/>
                     </VBox>
-                    
-                    <!-- Contests List -->
-                    <VBox spacing="10" VBox.vgrow="ALWAYS">
-                        <Label text="All Contests" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                        
-                        <TableView fx:id="contestsTable" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="contestIdColumn" text="Contest ID" prefWidth="120"/>
-                                <TableColumn fx:id="contestNameColumn" text="Contest Name" prefWidth="200"/>
-                                <TableColumn fx:id="dateTimeColumn" text="Date and Time" prefWidth="150"/>
-                                <TableColumn fx:id="durationColumn" text="Duration (min)" prefWidth="120"/>
-                                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
-                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
-                            </columns>
-                        </TableView>
+                    <VBox style="-fx-background-color: #27ae60; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS" alignment="CENTER">
+                        <Label text="Active Contests" style="-fx-text-fill: white; -fx-font-size: 12;"/>
+                        <Label fx:id="activeContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="Currently Running" style="-fx-text-fill: #bdc3c7; -fx-font-size: 11;"/>
                     </VBox>
+                    <VBox style="-fx-background-color: #9b59b6; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS" alignment="CENTER">
+                        <Label text="Total Registrations" style="-fx-text-fill: white; -fx-font-size: 12;"/>
+                        <Label fx:id="totalRegistrationsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="All Contests" style="-fx-text-fill: #bdc3c7; -fx-font-size: 11;"/>
+                    </VBox>
+                    <VBox style="-fx-background-color: #e74c3c; -fx-padding: 20; -fx-background-radius: 10;" HBox.hgrow="ALWAYS" alignment="CENTER">
+                        <Label text="Users" style="-fx-text-fill: white; -fx-font-size: 12;"/>
+                        <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                        <Label text="Registered Users" style="-fx-text-fill: #bdc3c7; -fx-font-size: 11;"/>
+                    </VBox>
+                </HBox>
+                
+                <!-- Recent Activity -->
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <Label text="Recent Selection Contests" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+                    <TableView fx:id="recentContestsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="contestCodeCol" text="Code" prefWidth="100"/>
+                            <TableColumn fx:id="contestNameCol" text="Name" prefWidth="250"/>
+                            <TableColumn fx:id="subContestCountCol" text="Sub-Contests" prefWidth="100"/>
+                            <TableColumn fx:id="registrationCountCol" text="Registrations" prefWidth="100"/>
+                            <TableColumn fx:id="statusCol" text="Status" prefWidth="100"/>
+                            <TableColumn fx:id="actionsCol" text="Actions" prefWidth="150"/>
+                        </columns>
+                    </TableView>
                 </VBox>
-            </Tab>
+            </VBox>
             
-            <!-- Tab 2: Manage Participants -->
-            <Tab text="👥 Manage Participants">
-                <VBox spacing="15" style="-fx-padding: 20;">
-                    
-                    <HBox spacing="15" alignment="CENTER_LEFT">
-                        <Label text="Select Contest:"/>
-                        <ComboBox fx:id="participantContestSelector" promptText="Choose a contest" prefWidth="300"/>
-                        <Button text="Load Participants" onAction="#handleLoadParticipants" styleClass="primary-button"/>
-                    </HBox>
-                    
-                    <!-- Add Participant Section -->
-                    <VBox spacing="10" style="-fx-background-color: #e8f5e9; -fx-padding: 15; -fx-background-radius: 5;">
-                        <Label text="Add Participant to Contest" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-                        <HBox spacing="10" alignment="CENTER_LEFT">
-                            <Label text="Username:"/>
-                            <TextField fx:id="addParticipantUsernameField" promptText="Enter username" prefWidth="200"/>
-                            <Button text="Add Participant" onAction="#handleAddParticipant" styleClass="primary-button"/>
-                        </HBox>
-                        <Label fx:id="addParticipantStatusLabel" text="" style="-fx-text-fill: #4CAF50;"/>
-                    </VBox>
-                    
-                    <VBox spacing="10" VBox.vgrow="ALWAYS">
-                        <HBox spacing="20" alignment="CENTER_LEFT">
-                            <Label text="Contest Participants" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                            <Label fx:id="participantCountLabel" text="(0 participants)" style="-fx-font-size: 14; -fx-text-fill: #666;"/>
-                        </HBox>
-                        
-                        <TableView fx:id="participantsTable" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="participantUsernameColumn" text="Username" prefWidth="150"/>
-                                <TableColumn fx:id="participantRatingColumn" text="Current Rating" prefWidth="120"/>
-                                <TableColumn fx:id="participantSolvedColumn" text="Problems Solved" prefWidth="130"/>
-                                <TableColumn fx:id="participantPenaltyColumn" text="Penalty" prefWidth="100"/>
-                                <TableColumn fx:id="participantRankColumn" text="Rank" prefWidth="80"/>
-                                <TableColumn fx:id="participantActionsColumn" text="Actions" prefWidth="120"/>
-                            </columns>
-                        </TableView>
-                    </VBox>
-                </VBox>
-            </Tab>
-            
-            <!-- Tab 3: Statistics -->
-            <Tab text="📊 Statistics">
-                <VBox spacing="20" style="-fx-padding: 30;" alignment="CENTER">
-                    
-                    <Label text="System Statistics" style="-fx-font-size: 24; -fx-font-weight: bold;"/>
-                    
-                    <GridPane hgap="30" vgap="20" alignment="CENTER">
-                        
-                        <!-- Stat Card 1 -->
-                        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #2196F3; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                            <Label text="Total Contests" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="totalContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
-                        </VBox>
-                        
-                        <!-- Stat Card 2 -->
-                        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #4CAF50; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                            <Label text="Total Users" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
-                        </VBox>
-                        
-                        <!-- Stat Card 3 -->
-                        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #ff9800; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                            <Label text="Future Contests" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="futureContestsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
-                        </VBox>
-                        
-                        <!-- Stat Card 4 -->
-                        <VBox spacing="10" alignment="CENTER" style="-fx-background-color: #9C27B0; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <Label text="Total Participants" style="-fx-text-fill: white; -fx-font-size: 16;"/>
-                            <Label fx:id="totalParticipantsLabel" text="0" style="-fx-text-fill: white; -fx-font-size: 48; -fx-font-weight: bold;"/>
-                        </VBox>
+            <!-- Contest Management View -->
+            <VBox fx:id="contestsView" spacing="20" visible="false" managed="false" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Selection Contests Management" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="➕ Create New Contest" onAction="#handleCreateContest" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+                
+                <!-- Create Contest Form -->
+                <VBox fx:id="createContestForm" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" visible="false" managed="false">
+                    <Label text="Create New Selection Contest" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <GridPane hgap="15" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Contest Code:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="contestCodeField" promptText="e.g., SC2024_001" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Contest Name:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="contestNameField" promptText="e.g., Selection Contest Round 1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Description:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <TextArea fx:id="contestDescField" promptText="Enter contest description..." prefRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Start Date:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                        <DatePicker fx:id="startDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                        <Label text="End Date:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                        <DatePicker fx:id="endDatePicker" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                     </GridPane>
-                    
-                    <Button text="Refresh Statistics" onAction="#handleRefreshStats" styleClass="primary-button" style="-fx-font-size: 16; -fx-padding: 15 30;"/>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Cancel" onAction="#handleCancelCreateContest" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+                        <Button text="Create Contest" onAction="#handleSaveContest" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+                    </HBox>
                 </VBox>
-            </Tab>
+                
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="allContestsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="allContestCodeCol" text="Code" prefWidth="100"/>
+                            <TableColumn fx:id="allContestNameCol" text="Name" prefWidth="200"/>
+                            <TableColumn fx:id="allContestDescCol" text="Description" prefWidth="200"/>
+                            <TableColumn fx:id="allSubContestCountCol" text="Sub-Contests" prefWidth="100"/>
+                            <TableColumn fx:id="allRegistrationCountCol" text="Registrations" prefWidth="100"/>
+                            <TableColumn fx:id="allCreatedDateCol" text="Created" prefWidth="120"/>
+                            <TableColumn fx:id="allStatusCol" text="Status" prefWidth="80"/>
+                            <TableColumn fx:id="allActionsCol" text="Actions" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
             
-        </TabPane>
+            <!-- Sub-Contests View -->
+            <VBox fx:id="subContestsView" spacing="20" visible="false" managed="false" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Sub-Contests Management" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="selectContestCombo" promptText="Select Contest" prefWidth="250"/>
+                    <Button text="➕ Add Sub-Contest" onAction="#handleAddSubContest" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand;"/>
+                </HBox>
+                
+                <!-- Add Sub-Contest Form -->
+                <VBox fx:id="addSubContestForm" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" visible="false" managed="false">
+                    <Label text="Add Codeforces Sub-Contest" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
+                    <GridPane hgap="15" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="150"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+                        <Label text="Codeforces Contest ID:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <TextField fx:id="cfContestIdField" promptText="e.g., 1900" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="Weight (0.0 - 1.0):" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <TextField fx:id="weightField" promptText="e.g., 0.3" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Button text="Fetch Contest Info" onAction="#handleFetchContestInfo" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                    </GridPane>
+                    <VBox fx:id="cfContestInfoBox" visible="false" managed="false" style="-fx-background-color: #f8f9fa; -fx-padding: 10; -fx-background-radius: 5;">
+                        <Label fx:id="cfContestNameLabel" text="Contest Name: --"/>
+                        <Label fx:id="cfContestPhaseLabel" text="Phase: --"/>
+                        <Label fx:id="cfContestDurationLabel" text="Duration: --"/>
+                    </VBox>
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button text="Cancel" onAction="#handleCancelAddSubContest" style="-fx-background-color: #95a5a6; -fx-text-fill: white;"/>
+                        <Button text="Add Sub-Contest" onAction="#handleSaveSubContest" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+                    </HBox>
+                </VBox>
+                
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="subContestsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="cfIdCol" text="CF ID" prefWidth="80"/>
+                            <TableColumn fx:id="cfNameCol" text="Contest Name" prefWidth="300"/>
+                            <TableColumn fx:id="cfDateCol" text="Date" prefWidth="150"/>
+                            <TableColumn fx:id="weightCol" text="Weight" prefWidth="80"/>
+                            <TableColumn fx:id="phaseCol" text="Phase" prefWidth="100"/>
+                            <TableColumn fx:id="subActionsCol" text="Actions" prefWidth="180"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+            
+            <!-- Registrations View -->
+            <VBox fx:id="registrationsView" spacing="20" visible="false" managed="false" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Registration Log" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="regContestCombo" promptText="Filter by Contest" prefWidth="250"/>
+                    <Button text="Export CSV" onAction="#handleExportRegistrations" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="registrationsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="regUsernameCol" text="Username" prefWidth="150"/>
+                            <TableColumn fx:id="regCfHandleCol" text="CF Handle" prefWidth="150"/>
+                            <TableColumn fx:id="regContestCol" text="Contest" prefWidth="200"/>
+                            <TableColumn fx:id="regDateCol" text="Registered At" prefWidth="150"/>
+                            <TableColumn fx:id="regStatusCol" text="Status" prefWidth="100"/>
+                            <TableColumn fx:id="regActionsCol" text="Actions" prefWidth="150"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+            
+            <!-- Standings View -->
+            <VBox fx:id="standingsView" spacing="20" visible="false" managed="false" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Contest Standings" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="standingsContestCombo" promptText="Select Contest" prefWidth="250"/>
+                    <Button text="🔄 Recalculate" onAction="#handleRecalculateStandings" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+                    <Button text="📥 Fetch CF Data" onAction="#handleFetchCFData" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="standingsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="rankCol" text="Rank" prefWidth="60"/>
+                            <TableColumn fx:id="standUsernameCol" text="Username" prefWidth="150"/>
+                            <TableColumn fx:id="standCfHandleCol" text="CF Handle" prefWidth="150"/>
+                            <TableColumn fx:id="finalRatingCol" text="Final Rating" prefWidth="120"/>
+                            <TableColumn fx:id="participatedCol" text="Participated" prefWidth="100"/>
+                            <TableColumn fx:id="standActionsCol" text="Details" prefWidth="100"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+            
+            <!-- Audit Logs View -->
+            <VBox fx:id="auditLogsView" spacing="20" visible="false" managed="false" style="-fx-padding: 20; -fx-background-color: #ecf0f1;">
+                
+                <HBox alignment="CENTER_LEFT" spacing="15">
+                    <Label text="Audit Logs" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="logTypeCombo" promptText="Filter by Type" prefWidth="200"/>
+                    <Button text="🔄 Refresh" onAction="#handleRefreshLogs" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                </HBox>
+                
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="auditLogsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="logTimeCol" text="Timestamp" prefWidth="150"/>
+                            <TableColumn fx:id="logActionCol" text="Action" prefWidth="150"/>
+                            <TableColumn fx:id="logActorCol" text="Actor" prefWidth="120"/>
+                            <TableColumn fx:id="logEntityCol" text="Entity" prefWidth="150"/>
+                            <TableColumn fx:id="logDetailsCol" text="Details" prefWidth="300"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </StackPane>
     </center>
     
+    <!-- Bottom Status Bar -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #34495e; -fx-padding: 8 20;">
+            <Label fx:id="statusLabel" text="Ready" style="-fx-text-fill: white;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="lastUpdateLabel" text="Last Update: --" style="-fx-text-fill: #bdc3c7;"/>
+        </HBox>
+    </bottom>
 </BorderPane>

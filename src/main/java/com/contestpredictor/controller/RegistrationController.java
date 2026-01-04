@@ -1,7 +1,7 @@
 package com.contestpredictor.controller;
 
-import com.contestpredictor.data.AdminDatabase;
 import com.contestpredictor.data.UserDatabase;
+import com.contestpredictor.model.User.UserRole;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,7 +37,7 @@ public class RegistrationController {
     private RadioButton contestantRadio;
     
     @FXML
-    private RadioButton adminRadio;
+    private RadioButton setterRadio;
     
     private ToggleGroup accountTypeGroup;
 
@@ -48,17 +48,11 @@ public class RegistrationController {
         String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
-        boolean isAdmin = adminRadio.isSelected();
+        boolean isSetter = setterRadio.isSelected();
 
         // Validate input fields
         if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             showError("Please fill in all fields");
-            return;
-        }
-        
-        // Validate email for admin
-        if (isAdmin && email.isEmpty()) {
-            showError("Email is required for admin registration");
             return;
         }
 
@@ -91,27 +85,15 @@ public class RegistrationController {
             return;
         }
 
-        // Attempt to register the user
-        boolean success;
-        if (isAdmin) {
-            AdminDatabase adminDB = AdminDatabase.getInstance();
-            success = adminDB.registerAdmin(username, password, fullName);
-            if (success) {
-                showSuccess("Admin account created successfully! Redirecting to login...");
-            } else {
-                showError("Admin username already exists. Please choose another one.");
-            }
-        } else {
-            UserDatabase userDB = UserDatabase.getInstance();
-            success = userDB.registerUser(username, password, fullName);
-            if (success) {
-                showSuccess("Account created successfully! Redirecting to login...");
-            } else {
-                showError("Username already exists. Please choose another one.");
-            }
-        }
-
+        // Create user with appropriate role
+        UserRole role = isSetter ? UserRole.SETTER : UserRole.CONTESTANT;
+        UserDatabase userDB = UserDatabase.getInstance();
+        boolean success = userDB.registerUserWithRole(username, password, fullName, email, role);
+        
         if (success) {
+            String roleText = isSetter ? "Setter" : "Contestant";
+            showSuccess(roleText + " account created successfully! Redirecting to login...");
+            
             // Navigate to login after a short delay
             new Thread(() -> {
                 try {
@@ -121,6 +103,8 @@ public class RegistrationController {
                     e.printStackTrace();
                 }
             }).start();
+        } else {
+            showError("Username already exists. Please choose another one.");
         }
     }
 
@@ -162,32 +146,12 @@ public class RegistrationController {
         // Setup account type toggle group
         accountTypeGroup = new ToggleGroup();
         contestantRadio.setToggleGroup(accountTypeGroup);
-        adminRadio.setToggleGroup(accountTypeGroup);
+        setterRadio.setToggleGroup(accountTypeGroup);
         contestantRadio.setSelected(true); // Default to contestant
-        
-        // Email field visibility based on account type
-        emailField.setVisible(false);
-        emailField.setManaged(false);
-        
-        accountTypeGroup.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == adminRadio) {
-                emailField.setVisible(true);
-                emailField.setManaged(true);
-            } else {
-                emailField.setVisible(false);
-                emailField.setManaged(false);
-            }
-        });
         
         // Add enter key handlers for smooth navigation
         fullNameField.setOnAction(event -> usernameField.requestFocus());
-        usernameField.setOnAction(event -> {
-            if (emailField.isVisible()) {
-                emailField.requestFocus();
-            } else {
-                passwordField.requestFocus();
-            }
-        });
+        usernameField.setOnAction(event -> emailField.requestFocus());
         emailField.setOnAction(event -> passwordField.requestFocus());
         passwordField.setOnAction(event -> confirmPasswordField.requestFocus());
         confirmPasswordField.setOnAction(event -> handleRegister());

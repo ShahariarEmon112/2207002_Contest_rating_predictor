@@ -91,7 +91,7 @@
                                     <Font size="14" />
                                 </font>
                             </RadioButton>
-                            <RadioButton fx:id="adminRadio" text="Admin" styleClass="radio-button">
+                            <RadioButton fx:id="setterRadio" text="Setter" styleClass="radio-button">
                                 <font>
                                     <Font size="14" />
                                 </font>
@@ -127,9 +127,9 @@
                         </TextField>
                     </VBox>
                     
-                    <!-- Email Field (for Admin only) -->
+                    <!-- Email Field -->
                     <VBox fx:id="emailBox" spacing="8">
-                        <Label styleClass="field-label" text="Email (Required for Admin)">
+                        <Label styleClass="field-label" text="Email">
                             <font>
                                 <Font name="System Bold" size="15.0" />
                             </font>

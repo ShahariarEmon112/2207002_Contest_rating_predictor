@@ -1,7 +1,6 @@
 package com.contestpredictor.controller;
 
 import com.contestpredictor.data.ContestDatabase;
-import com.contestpredictor.data.DatabaseManager;
 import com.contestpredictor.data.UserDatabase;
 import com.contestpredictor.model.Contest;
 import com.contestpredictor.model.Participant;
@@ -24,8 +23,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Controller for managing contest standings
- * Allows viewing and updating participant solve counts and generating contest results
+ * Controller for managing legacy contest standings
+ * Uses in-memory ContestDatabase for backward compatibility
  */
 public class ContestStandingsController {
     
@@ -48,9 +47,11 @@ public class ContestStandingsController {
     
     private String currentUsername;
     private boolean isAdmin = false;
+    private ContestDatabase contestDB;
     
     @FXML
     public void initialize() {
+        contestDB = ContestDatabase.getInstance();
         setupTable();
         loadContests();
         
@@ -75,7 +76,6 @@ public class ContestStandingsController {
         solvedColumn.setOnEditCommit(event -> {
             Participant participant = event.getRowValue();
             participant.setProblemsSolved(event.getNewValue());
-            updateParticipantInDatabase(participant);
         });
         
         penaltyColumn.setCellValueFactory(new PropertyValueFactory<>("totalPenalty"));
@@ -83,7 +83,6 @@ public class ContestStandingsController {
         penaltyColumn.setOnEditCommit(event -> {
             Participant participant = event.getRowValue();
             participant.setTotalPenalty(event.getNewValue());
-            updateParticipantInDatabase(participant);
         });
         
         predictedRatingColumn.setCellValueFactory(new PropertyValueFactory<>("predictedRating"));
@@ -116,7 +115,6 @@ public class ContestStandingsController {
     }
     
     private void loadContests() {
-        ContestDatabase contestDB = ContestDatabase.getInstance();
         List<Contest> contests = contestDB.getAllContests();
         
         ObservableList<String> contestNames = FXCollections.observableArrayList();
@@ -145,7 +143,6 @@ public class ContestStandingsController {
     }
     
     private void loadContestStandings(String contestId) {
-        ContestDatabase contestDB = ContestDatabase.getInstance();
         Contest contest = contestDB.getContestById(contestId);
         
         if (contest == null) return;
@@ -154,9 +151,8 @@ public class ContestStandingsController {
         contestInfoLabel.setText(String.format("Duration: %d minutes | Registered: %d", 
             contest.getDuration(), contest.getRegisteredCount()));
         
-        // Load participants from database
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-        List<Participant> participants = dbManager.getParticipantsByContest(contestId);
+        // Get participants from the contest
+        List<Participant> participants = contest.getParticipants();
         
         // If no participants exist, generate them
         if (participants.isEmpty()) {
@@ -172,21 +168,11 @@ public class ContestStandingsController {
     
     private List<Participant> generateInitialParticipants(Contest contest) {
         List<Participant> participants = new ArrayList<>();
-        DatabaseManager dbManager = DatabaseManager.getInstance();
         UserDatabase userDB = UserDatabase.getInstance();
         
-        // Get already registered users
-        List<String> registeredUsers = dbManager.getRegisteredUsers(contest.getContestId());
-        
-        // Add default users (user001-user030) if not already registered
+        // Add default users (user001-user030)
         for (int i = 1; i <= 30; i++) {
             String username = String.format("user%03d", i);
-            
-            // Register user for contest if not already registered
-            if (!registeredUsers.contains(username)) {
-                dbManager.registerUserForContest(contest.getContestId(), username);
-                registeredUsers.add(username);
-            }
             
             // Check if user exists in database
             User user = userDB.getUser(username);
@@ -195,28 +181,7 @@ public class ContestStandingsController {
             Participant p = new Participant(username, rating, 0, 0);
             p.setRank(i);
             participants.add(p);
-            
-            // Save to database
-            dbManager.saveParticipant(contest.getContestId(), p);
-        }
-        
-        // Add any other registered users who aren't in default list
-        int rank = 31;
-        for (String username : registeredUsers) {
-            // Skip if already added
-            boolean alreadyAdded = participants.stream()
-                .anyMatch(p -> p.getUsername().equals(username));
-            if (alreadyAdded) continue;
-            
-            User user = userDB.getUser(username);
-            int rating = (user != null) ? user.getCurrentRating() : 1200;
-            
-            Participant p = new Participant(username, rating, 0, 0);
-            p.setRank(rank++);
-            participants.add(p);
-            
-            // Save to database
-            dbManager.saveParticipant(contest.getContestId(), p);
+            contest.addParticipant(p);
         }
         
         return participants;
@@ -275,13 +240,6 @@ public class ContestStandingsController {
             p.setPredictedRating(p.getCurrentRating() + ratingChange);
         }
         
-        // Save to database
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-        for (Participant p : sortedList) {
-            dbManager.updateParticipantSolveCount(contestId, p.getUsername(), 
-                p.getProblemsSolved(), p.getTotalPenalty());
-        }
-        
         // Refresh table
         standingsTable.setItems(FXCollections.observableArrayList(sortedList));
         showAlert("Success", "Contest results generated successfully!");
@@ -300,16 +258,6 @@ public class ContestStandingsController {
         return (int) Math.round(expectedRank);
     }
     
-    private void updateParticipantInDatabase(Participant participant) {
-        String selected = contestSelector.getValue();
-        if (selected == null) return;
-        
-        String contestId = selected.split(" - ")[0];
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-        dbManager.updateParticipantSolveCount(contestId, participant.getUsername(), 
-            participant.getProblemsSolved(), participant.getTotalPenalty());
-    }
-    
     private void handleRemoveParticipant(Participant participant) {
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Remove Participant");
@@ -318,18 +266,18 @@ public class ContestStandingsController {
         
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
+            standingsTable.getItems().remove(participant);
+            
+            // Also remove from contest
             String selected = contestSelector.getValue();
-            if (selected == null) return;
-            
-            String contestId = selected.split(" - ")[0];
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-            
-            if (dbManager.removeParticipant(contestId, participant.getUsername())) {
-                standingsTable.getItems().remove(participant);
-                showAlert("Success", "Participant removed successfully");
-            } else {
-                showAlert("Error", "Failed to remove participant");
+            if (selected != null) {
+                String contestId = selected.split(" - ")[0];
+                Contest contest = contestDB.getContestById(contestId);
+                if (contest != null) {
+                    contest.getParticipants().remove(participant);
+                }
             }
+            showAlert("Success", "Participant removed successfully");
         }
     }
     
@@ -352,36 +300,33 @@ public class ContestStandingsController {
         }
         
         String contestId = selected.split(" - ")[0];
-        DatabaseManager dbManager = DatabaseManager.getInstance();
+        Contest contest = contestDB.getContestById(contestId);
+        
+        if (contest == null) {
+            showAlert("Error", "Contest not found");
+            return;
+        }
         
         // Check if already registered
-        if (dbManager.isUserRegisteredForContest(contestId, currentUsername)) {
+        boolean alreadyRegistered = contest.getParticipants().stream()
+            .anyMatch(p -> p.getUsername().equals(currentUsername));
+        
+        if (alreadyRegistered) {
             showAlert("Info", "You are already registered for this contest!");
             return;
         }
         
         // Register user
-        if (dbManager.registerUserForContest(contestId, currentUsername)) {
-            // Add to participants if not already there
-            List<Participant> participants = dbManager.getParticipantsByContest(contestId);
-            boolean participantExists = participants.stream()
-                .anyMatch(p -> p.getUsername().equals(currentUsername));
-            
-            if (!participantExists) {
-                UserDatabase userDB = UserDatabase.getInstance();
-                User user = userDB.getUser(currentUsername);
-                int rating = (user != null) ? user.getCurrentRating() : 1200;
-                
-                Participant newParticipant = new Participant(currentUsername, rating, 0, 0);
-                newParticipant.setRank(participants.size() + 1);
-                dbManager.saveParticipant(contestId, newParticipant);
-            }
-            
-            showAlert("Success", "You have been registered for this contest!");
-            handleRefresh();
-        } else {
-            showAlert("Error", "Failed to register for contest");
-        }
+        UserDatabase userDB = UserDatabase.getInstance();
+        User user = userDB.getUser(currentUsername);
+        int rating = (user != null) ? user.getCurrentRating() : 1200;
+        
+        Participant newParticipant = new Participant(currentUsername, rating, 0, 0);
+        newParticipant.setRank(contest.getParticipants().size() + 1);
+        contest.addParticipant(newParticipant);
+        
+        showAlert("Success", "You have been registered for this contest!");
+        handleRefresh();
     }
     
     @FXML
@@ -418,11 +363,11 @@ public class ContestStandingsController {
         }
     }
     
-    private void showAlert(String title, String message) {
+    private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }

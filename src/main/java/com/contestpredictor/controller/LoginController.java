@@ -4,6 +4,7 @@ import com.contestpredictor.data.AdminDatabase;
 import com.contestpredictor.data.UserDatabase;
 import com.contestpredictor.model.Admin;
 import com.contestpredictor.model.User;
+import com.contestpredictor.model.User.UserRole;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,85 +35,97 @@ public class LoginController {
             return;
         }
 
-        // Check if admin login
-        AdminDatabase adminDB = AdminDatabase.getInstance();
-        Admin admin = adminDB.authenticate(username, password);
-        
-        if (admin != null) {
-            // Admin login successful - navigate to admin dashboard
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                Parent root = loader.load();
-                
-                AdminDashboardController controller = loader.getController();
-                controller.setAdmin(admin);
-                
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                
-                // Preserve window state
-                boolean wasFullScreen = stage.isFullScreen();
-                boolean wasMaximized = stage.isMaximized();
-                double currentWidth = stage.getWidth();
-                double currentHeight = stage.getHeight();
-                
-                Scene scene = new Scene(root, currentWidth, currentHeight);
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                
-                stage.setScene(scene);
-                stage.setTitle("Admin Dashboard - Contest Rating Predictor");
-                
-                // Restore window state
-                if (wasMaximized) {
-                    stage.setMaximized(true);
-                }
-                if (wasFullScreen) {
-                    stage.setFullScreen(true);
-                }
-                return;
-            } catch (Exception e) {
-                e.printStackTrace();
-                showError("Error loading admin dashboard: " + e.getMessage());
-                return;
-            }
-        }
-        
-        // Check user login
+        // Check user login (both Setter and Contestant)
         UserDatabase userDB = UserDatabase.getInstance();
         User user = userDB.authenticate(username, password);
 
         if (user != null) {
-            // Login successful - navigate to profile
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Profile.fxml"));
-                Parent root = loader.load();
-                
-                Stage stage = (Stage) usernameField.getScene().getWindow();
-                
-                // Preserve window state
-                boolean wasFullScreen = stage.isFullScreen();
-                boolean wasMaximized = stage.isMaximized();
-                double currentWidth = stage.getWidth();
-                double currentHeight = stage.getHeight();
-                
-                Scene scene = new Scene(root, currentWidth, currentHeight);
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                
-                stage.setScene(scene);
-                stage.setTitle("Profile - Contest Rating Predictor");
-                
-                // Restore window state
-                if (wasMaximized) {
-                    stage.setMaximized(true);
-                }
-                if (wasFullScreen) {
-                    stage.setFullScreen(true);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                showError("Error loading profile: " + e.getMessage());
+            // Route based on user role
+            if (user.getRole() == UserRole.SETTER) {
+                navigateToSetterDashboard(user);
+            } else {
+                navigateToContestantDashboard(user);
             }
-        } else {
-            showError("Invalid username or password");
+            return;
+        }
+        
+        // Check admin login (fallback for existing admins)
+        AdminDatabase adminDB = AdminDatabase.getInstance();
+        Admin admin = adminDB.authenticate(username, password);
+        
+        if (admin != null) {
+            navigateToAdminDashboard(admin);
+            return;
+        }
+
+        showError("Invalid username or password");
+    }
+    
+    private void navigateToContestantDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserDashboard.fxml"));
+            Parent root = loader.load();
+            
+            UserDashboardController controller = loader.getController();
+            controller.setUser(user);
+            
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            navigateToScene(stage, root, "Contestant Dashboard - Contest Rating Predictor");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Error loading contestant dashboard: " + e.getMessage());
+        }
+    }
+    
+    private void navigateToSetterDashboard(User user) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SetterDashboard.fxml"));
+            Parent root = loader.load();
+            
+            SetterDashboardController controller = loader.getController();
+            controller.setUser(user);
+            
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            navigateToScene(stage, root, "Setter Dashboard - Contest Rating Predictor");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Error loading setter dashboard: " + e.getMessage());
+        }
+    }
+    
+    private void navigateToAdminDashboard(Admin admin) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+            Parent root = loader.load();
+            
+            AdminDashboardController controller = loader.getController();
+            controller.setAdmin(admin);
+            
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            navigateToScene(stage, root, "Admin Dashboard - Contest Rating Predictor");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Error loading admin dashboard: " + e.getMessage());
+        }
+    }
+    
+    private void navigateToScene(Stage stage, Parent root, String title) {
+        boolean wasFullScreen = stage.isFullScreen();
+        boolean wasMaximized = stage.isMaximized();
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        
+        Scene scene = new Scene(root, currentWidth, currentHeight);
+        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+        
+        stage.setScene(scene);
+        stage.setTitle(title);
+        
+        if (wasMaximized) {
+            stage.setMaximized(true);
+        }
+        if (wasFullScreen) {
+            stage.setFullScreen(true);
         }
     }
 

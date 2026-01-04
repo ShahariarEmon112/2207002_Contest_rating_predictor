@@ -1,8 +1,11 @@
 package com.contestpredictor.data;
 
 import com.contestpredictor.model.User;
+import com.contestpredictor.model.User.UserRole;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 public class UserDatabase {
     private static UserDatabase instance;
@@ -70,34 +73,73 @@ public class UserDatabase {
         if (user == null) {
             user = new User(username, password, rating, contests, fullName);
             dbManager.saveUser(user);
+            // Reload to get the ID
+            user = dbManager.loadUser(username);
         }
-        users.put(username, user);
+        if (user != null) {
+            users.put(username, user);
+        }
     }
 
     public User authenticate(String username, String password) {
-        User user = users.get(username);
+        // First try to load from database for fresh data
+        User user = dbManager.loadUser(username);
+        if (user == null) {
+            user = users.get(username);
+        }
+        
         if (user != null && user.getPassword().equals(password)) {
             currentUser = user;
+            users.put(username, user); // Update cache
             return user;
         }
         return null;
     }
 
     public boolean registerUser(String username, String password, String fullName) {
+        return registerUserWithRole(username, password, fullName, null, UserRole.CONTESTANT);
+    }
+    
+    public boolean registerUserWithRole(String username, String password, String fullName, String email, UserRole role) {
         // Check if username already exists
-        if (users.containsKey(username)) {
+        if (users.containsKey(username) || dbManager.loadUser(username) != null) {
             return false;
         }
         
-        // Create new user with initial rating of 1000 and 0 contests
-        User newUser = new User(username, password, 1000, 0, fullName);
-        users.put(username, newUser);
-        currentUser = newUser;
+        // Create new user with appropriate role
+        User newUser = new User(username, password, fullName, role);
+        newUser.setEmail(email);
+        newUser.setCurrentRating(1000);
+        newUser.setContestsParticipated(0);
         
         // Save to database
-        dbManager.saveUser(newUser);
+        boolean saved = dbManager.saveUser(newUser);
+        if (saved) {
+            users.put(username, newUser);
+            currentUser = newUser;
+        }
         
-        return true;
+        return saved;
+    }
+    
+    public List<User> getSetters() {
+        List<User> setters = new ArrayList<>();
+        for (User user : users.values()) {
+            if (user.getRole() == UserRole.SETTER) {
+                setters.add(user);
+            }
+        }
+        return setters;
+    }
+    
+    public List<User> getContestants() {
+        List<User> contestants = new ArrayList<>();
+        for (User user : users.values()) {
+            if (user.getRole() == UserRole.CONTESTANT) {
+                contestants.add(user);
+            }
+        }
+        return contestants;
     }
 
     public User getCurrentUser() {
