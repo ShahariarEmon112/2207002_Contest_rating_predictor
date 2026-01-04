@@ -127,7 +127,7 @@ public class DatabaseManager {
             stmt.execute("CREATE TABLE IF NOT EXISTS selection_contests (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "contest_code TEXT UNIQUE NOT NULL," +
-                    "share_key TEXT UNIQUE," +
+                    "share_key TEXT," +
                     "name TEXT NOT NULL," +
                     "description TEXT," +
                     "created_by_admin_id INTEGER," +
@@ -138,11 +138,12 @@ public class DatabaseManager {
                     "FOREIGN KEY (created_by_admin_id) REFERENCES users(id)" +
                     ")");
             
-            // Add share_key column if it doesn't exist
+            // Add share_key column if it doesn't exist (for existing databases)
             try {
-                stmt.execute("ALTER TABLE selection_contests ADD COLUMN share_key TEXT UNIQUE");
-            } catch (SQLException e) {
-                // Column already exists
+                stmt.execute("ALTER TABLE selection_contests ADD COLUMN share_key TEXT");
+                System.out.println("Added share_key column to selection_contests table");
+            } catch (Exception e) {
+                // Column already exists, ignore
             };
 
             // ==================== SUB CONTESTS TABLE ====================

@@ -7,6 +7,7 @@ C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\ma
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\ProfileController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\SelectionContest.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\data\ContestDatabase.java
+C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\AddSubContestController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\RatingPredictorController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\util\AdminSetup.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\ContestStandingsController.java
@@ -20,6 +21,7 @@ C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\ma
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\Admin.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\data\AdminDatabase.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\AuditLog.java
+C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\SelectionContestManageController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\AdminLoginController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\controller\SetterDashboardController.java
 C:\Users\Shahariar Emon\OneDrive\Desktop\2207002_Contest_rating_predictor\src\main\java\com\contestpredictor\model\FinalRating.java
