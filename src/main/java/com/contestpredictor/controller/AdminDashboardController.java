@@ -185,19 +185,35 @@ public class AdminDashboardController {
     }
     
     public void setAdmin(Admin admin) {
+        System.out.println("setAdmin called with: " + (admin != null ? admin.getFullName() : "null"));
+        
+        if (admin == null) {
+            System.err.println("ERROR: Admin object is null!");
+            return;
+        }
+        
         this.currentAdmin = admin;
+        
         if (adminNameLabel != null) {
             adminNameLabel.setText(admin.getFullName());
+            System.out.println("Admin name label set to: " + admin.getFullName());
+        } else {
+            System.err.println("WARNING: adminNameLabel is null!");
         }
         
         // Load initial data
         try {
+            System.out.println("Loading contests...");
             loadContests();
+            System.out.println("Loading contest selectors...");
             loadContestSelectors();
+            System.out.println("Updating statistics...");
             updateStatistics();
+            System.out.println("All data loaded successfully");
         } catch (Exception e) {
             System.err.println("Error loading data after setting admin: " + e.getMessage());
             e.printStackTrace();
+            // Don't fail completely, just log the error
         }
     }
     

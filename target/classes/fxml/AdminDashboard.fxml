@@ -76,7 +76,7 @@
                             <columns>
                                 <TableColumn fx:id="contestIdColumn" text="Contest ID" prefWidth="120"/>
                                 <TableColumn fx:id="contestNameColumn" text="Contest Name" prefWidth="200"/>
-                                <TableColumn fx:id="dateTimeColumn" text="Date & Time" prefWidth="150"/>
+                                <TableColumn fx:id="dateTimeColumn" text="Date and Time" prefWidth="150"/>
                                 <TableColumn fx:id="durationColumn" text="Duration (min)" prefWidth="120"/>
                                 <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
                                 <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="150"/>
