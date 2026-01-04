@@ -20,9 +20,6 @@ public class RegistrationController {
 
     @FXML
     private TextField usernameField;
-    
-    @FXML
-    private TextField emailField;
 
     @FXML
     private PasswordField passwordField;
@@ -45,7 +42,6 @@ public class RegistrationController {
     private void handleRegister() {
         String fullName = fullNameField.getText().trim();
         String username = usernameField.getText().trim();
-        String email = emailField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
         boolean isSetter = setterRadio.isSelected();
@@ -88,7 +84,7 @@ public class RegistrationController {
         // Create user with appropriate role
         UserRole role = isSetter ? UserRole.SETTER : UserRole.CONTESTANT;
         UserDatabase userDB = UserDatabase.getInstance();
-        boolean success = userDB.registerUserWithRole(username, password, fullName, email, role);
+        boolean success = userDB.registerUserWithRole(username, password, fullName, null, role);
         
         if (success) {
             String roleText = isSetter ? "Setter" : "Contestant";
@@ -151,8 +147,7 @@ public class RegistrationController {
         
         // Add enter key handlers for smooth navigation
         fullNameField.setOnAction(event -> usernameField.requestFocus());
-        usernameField.setOnAction(event -> emailField.requestFocus());
-        emailField.setOnAction(event -> passwordField.requestFocus());
+        usernameField.setOnAction(event -> passwordField.requestFocus());
         passwordField.setOnAction(event -> confirmPasswordField.requestFocus());
         confirmPasswordField.setOnAction(event -> handleRegister());
     }

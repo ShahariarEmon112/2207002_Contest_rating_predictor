@@ -127,20 +127,6 @@
                         </TextField>
                     </VBox>
                     
-                    <!-- Email Field -->
-                    <VBox fx:id="emailBox" spacing="8">
-                        <Label styleClass="field-label" text="Email">
-                            <font>
-                                <Font name="System Bold" size="15.0" />
-                            </font>
-                        </Label>
-                        <TextField fx:id="emailField" promptText="Enter your email" styleClass="login-textfield">
-                            <font>
-                                <Font size="15.0" />
-                            </font>
-                        </TextField>
-                    </VBox>
-                    
                     <!-- Password Field -->
                     <VBox spacing="8">
                         <Label styleClass="field-label" text="Password">

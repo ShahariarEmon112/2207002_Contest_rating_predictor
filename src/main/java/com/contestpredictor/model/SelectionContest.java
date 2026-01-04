@@ -11,9 +11,10 @@ import java.util.List;
 public class SelectionContest {
     private int id;
     private String contestCode;          // Unique code for joining (e.g., "SC2026-001")
+    private String shareKey;             // Auto-generated key for sharing/searching (e.g., "ABC123")
     private String name;
     private String description;
-    private int createdByAdminId;
+    private int createdByAdminId;        // Can be setter or admin ID
     private String createdByAdminName;   // For display purposes
     private LocalDateTime createdAt;
     private LocalDateTime startDate;
@@ -26,6 +27,18 @@ public class SelectionContest {
         this.subContests = new ArrayList<>();
         this.isActive = true;
         this.createdAt = LocalDateTime.now();
+        this.shareKey = generateShareKey();
+    }
+    
+    // Generate a random 6-character alphanumeric key
+    private static String generateShareKey() {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder key = new StringBuilder();
+        java.util.Random random = new java.util.Random();
+        for (int i = 0; i < 6; i++) {
+            key.append(chars.charAt(random.nextInt(chars.length())));
+        }
+        return key.toString();
     }
 
     public SelectionContest(String contestCode, String name, String description) {
@@ -100,6 +113,14 @@ public class SelectionContest {
 
     public void setContestCode(String contestCode) {
         this.contestCode = contestCode;
+    }
+
+    public String getShareKey() {
+        return shareKey;
+    }
+
+    public void setShareKey(String shareKey) {
+        this.shareKey = shareKey;
     }
 
     public String getName() {

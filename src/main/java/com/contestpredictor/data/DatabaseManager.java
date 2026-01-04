@@ -47,12 +47,54 @@ public class DatabaseManager {
         try {
             Statement stmt = connection.createStatement();
 
+            // ==================== MIGRATE OLD USERS TABLE ====================
+            // Check if users table has old schema (password instead of password_hash)
+            try {
+                ResultSet rs = stmt.executeQuery("PRAGMA table_info(users)");
+                boolean hasPasswordHash = false;
+                boolean hasPassword = false;
+                while (rs.next()) {
+                    String colName = rs.getString("name");
+                    if ("password_hash".equals(colName)) hasPasswordHash = true;
+                    if ("password".equals(colName)) hasPassword = true;
+                }
+                rs.close();
+                
+                // If old schema exists, migrate it
+                if (hasPassword && !hasPasswordHash) {
+                    System.out.println("Migrating users table to new schema...");
+                    stmt.execute("ALTER TABLE users RENAME TO users_old");
+                    stmt.execute("CREATE TABLE users (" +
+                            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "username TEXT UNIQUE NOT NULL," +
+                            "password_hash TEXT NOT NULL," +
+                            "email TEXT," +
+                            "full_name TEXT NOT NULL," +
+                            "role TEXT DEFAULT 'CONTESTANT'," +
+                            "codeforces_handle TEXT," +
+                            "current_rating INTEGER DEFAULT 1500," +
+                            "contests_participated INTEGER DEFAULT 0," +
+                            "rating_history TEXT," +
+                            "created_at TEXT NOT NULL," +
+                            "is_active INTEGER DEFAULT 1" +
+                            ")");
+                    // Copy old data
+                    stmt.execute("INSERT INTO users (username, password_hash, full_name, current_rating, contests_participated, created_at, is_active) " +
+                            "SELECT username, password, COALESCE(full_name, username), COALESCE(current_rating, 1500), COALESCE(contests_participated, 0), " +
+                            "COALESCE(created_at, datetime('now')), 1 FROM users_old");
+                    stmt.execute("DROP TABLE users_old");
+                    System.out.println("Users table migration complete!");
+                }
+            } catch (SQLException e) {
+                // Table doesn't exist yet, will be created below
+            }
+
             // ==================== USERS TABLE ====================
             stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "username TEXT UNIQUE NOT NULL," +
                     "password_hash TEXT NOT NULL," +
-                    "email TEXT UNIQUE," +
+                    "email TEXT," +
                     "full_name TEXT NOT NULL," +
                     "role TEXT DEFAULT 'CONTESTANT'," +
                     "codeforces_handle TEXT," +
@@ -85,6 +127,7 @@ public class DatabaseManager {
             stmt.execute("CREATE TABLE IF NOT EXISTS selection_contests (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                     "contest_code TEXT UNIQUE NOT NULL," +
+                    "share_key TEXT UNIQUE," +
                     "name TEXT NOT NULL," +
                     "description TEXT," +
                     "created_by_admin_id INTEGER," +
@@ -92,8 +135,15 @@ public class DatabaseManager {
                     "start_date TEXT," +
                     "end_date TEXT," +
                     "is_active INTEGER DEFAULT 1," +
-                    "FOREIGN KEY (created_by_admin_id) REFERENCES admins(id)" +
+                    "FOREIGN KEY (created_by_admin_id) REFERENCES users(id)" +
                     ")");
+            
+            // Add share_key column if it doesn't exist
+            try {
+                stmt.execute("ALTER TABLE selection_contests ADD COLUMN share_key TEXT UNIQUE");
+            } catch (SQLException e) {
+                // Column already exists
+            };
 
             // ==================== SUB CONTESTS TABLE ====================
             stmt.execute("CREATE TABLE IF NOT EXISTS sub_contests (" +
@@ -407,17 +457,18 @@ public class DatabaseManager {
      * Create a new selection contest
      */
     public boolean createSelectionContest(SelectionContest contest) {
-        String sql = "INSERT INTO selection_contests (contest_code, name, description, created_by_admin_id, created_at, start_date, end_date, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO selection_contests (contest_code, share_key, name, description, created_by_admin_id, created_at, start_date, end_date, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setString(1, contest.getContestCode());
-            pstmt.setString(2, contest.getName());
-            pstmt.setString(3, contest.getDescription());
-            pstmt.setInt(4, contest.getCreatedByAdminId());
-            pstmt.setString(5, contest.getCreatedAt().format(DATE_FORMAT));
-            pstmt.setString(6, contest.getStartDate() != null ? contest.getStartDate().format(DATE_FORMAT) : null);
-            pstmt.setString(7, contest.getEndDate() != null ? contest.getEndDate().format(DATE_FORMAT) : null);
-            pstmt.setInt(8, contest.isActive() ? 1 : 0);
+            pstmt.setString(2, contest.getShareKey());
+            pstmt.setString(3, contest.getName());
+            pstmt.setString(4, contest.getDescription());
+            pstmt.setInt(5, contest.getCreatedByAdminId());
+            pstmt.setString(6, contest.getCreatedAt().format(DATE_FORMAT));
+            pstmt.setString(7, contest.getStartDate() != null ? contest.getStartDate().format(DATE_FORMAT) : null);
+            pstmt.setString(8, contest.getEndDate() != null ? contest.getEndDate().format(DATE_FORMAT) : null);
+            pstmt.setInt(9, contest.isActive() ? 1 : 0);
 
             pstmt.executeUpdate();
             
@@ -563,15 +614,89 @@ public class DatabaseManager {
         SelectionContest contest = new SelectionContest();
         contest.setId(rs.getInt("id"));
         contest.setContestCode(rs.getString("contest_code"));
+        
+        // Handle share_key - might not exist in older databases
+        try {
+            contest.setShareKey(rs.getString("share_key"));
+        } catch (SQLException e) {
+            // Column doesn't exist, keep generated key
+        }
+        
         contest.setName(rs.getString("name"));
         contest.setDescription(rs.getString("description"));
         contest.setCreatedByAdminId(rs.getInt("created_by_admin_id"));
-        contest.setCreatedByAdminName(rs.getString("admin_name"));
+        
+        // Handle admin_name - might not exist in all queries
+        try {
+            contest.setCreatedByAdminName(rs.getString("admin_name"));
+        } catch (SQLException e) {
+            // Column doesn't exist in this query
+        }
+        
         contest.setCreatedAt(parseDateTime(rs.getString("created_at")));
         contest.setStartDate(parseDateTime(rs.getString("start_date")));
         contest.setEndDate(parseDateTime(rs.getString("end_date")));
         contest.setActive(rs.getInt("is_active") == 1);
         return contest;
+    }
+    
+    /**
+     * Find selection contest by share key
+     */
+    public SelectionContest getSelectionContestByShareKey(String shareKey) {
+        String sql = "SELECT sc.*, u.full_name as admin_name FROM selection_contests sc " +
+                     "LEFT JOIN users u ON sc.created_by_admin_id = u.id " +
+                     "WHERE sc.share_key = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, shareKey.toUpperCase());
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return mapResultSetToSelectionContest(rs);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get contest by share key: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    /**
+     * Get contests created by a specific user (setter)
+     */
+    public List<SelectionContest> getContestsByCreator(int userId) {
+        List<SelectionContest> contests = new ArrayList<>();
+        String sql = "SELECT sc.*, u.full_name as admin_name FROM selection_contests sc " +
+                     "LEFT JOIN users u ON sc.created_by_admin_id = u.id " +
+                     "WHERE sc.created_by_admin_id = ? ORDER BY sc.created_at DESC";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                contests.add(mapResultSetToSelectionContest(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get contests by creator: " + e.getMessage());
+        }
+        return contests;
+    }
+    
+    /**
+     * Update sub-contest weight
+     */
+    public boolean updateSubContestWeight(int subContestId, double newWeight) {
+        String sql = "UPDATE sub_contests SET weight = ? WHERE id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setDouble(1, newWeight);
+            pstmt.setInt(2, subContestId);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Failed to update sub-contest weight: " + e.getMessage());
+            return false;
+        }
     }
 
     // ==================== SUB CONTEST OPERATIONS ====================
@@ -630,23 +755,6 @@ public class DatabaseManager {
     }
 
     /**
-     * Update sub-contest weight
-     */
-    public boolean updateSubContestWeight(int subContestId, double weight) {
-        String sql = "UPDATE sub_contests SET weight = ? WHERE id = ?";
-        
-        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-            pstmt.setDouble(1, weight);
-            pstmt.setInt(2, subContestId);
-            pstmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Failed to update sub-contest weight: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
      * Delete a sub-contest
      */
     public boolean deleteSubContest(int subContestId) {
@@ -699,6 +807,45 @@ public class DatabaseManager {
             System.err.println("Failed to get sub-contest: " + e.getMessage());
         }
         return null;
+    }
+    
+    /**
+     * Check if a sub-contest already exists for a selection contest
+     */
+    public boolean subContestExists(int selectionContestId, int codeforcesContestId) {
+        String sql = "SELECT COUNT(*) FROM sub_contests WHERE selection_contest_id = ? AND codeforces_contest_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, selectionContestId);
+            pstmt.setInt(2, codeforcesContestId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to check sub-contest existence: " + e.getMessage());
+        }
+        return false;
+    }
+    
+    /**
+     * Get participant count for a specific sub-contest
+     */
+    public int getSubContestParticipantCount(int subContestId) {
+        String sql = "SELECT COUNT(DISTINCT cr.registration_id) FROM contest_results cr WHERE cr.sub_contest_id = ?";
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, subContestId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.err.println("Failed to get sub-contest participant count: " + e.getMessage());
+        }
+        return 0;
     }
 
     private SubContest mapResultSetToSubContest(ResultSet rs) throws SQLException {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.contestpredictor.controller.AddSubContestController"
+      spacing="20" style="-fx-background-color: white; -fx-padding: 30;" prefWidth="500">
+    
+    <Label text="Add Codeforces Contest" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
+    
+    <Separator/>
+    
+    <VBox spacing="8">
+        <Label text="Codeforces Contest Link or ID *" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="cfLinkField" promptText="https://codeforces.com/contest/1234 or just 1234"/>
+        <Label text="Enter the full URL or just the contest ID number" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+    </VBox>
+    
+    <VBox spacing="8">
+        <Label text="Weight *" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="weightField" text="1.0" promptText="1.0"/>
+        <Label text="Higher weight = more impact on final rating (e.g., 1.0, 1.5, 2.0)" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+    </VBox>
+    
+    <VBox spacing="8">
+        <Label text="Description (optional)"/>
+        <TextArea fx:id="descriptionField" promptText="Optional notes about this sub-contest..." 
+                  prefRowCount="3" wrapText="true"/>
+    </VBox>
+    
+    <Label fx:id="messageLabel" text="" wrapText="true"/>
+    
+    <Separator/>
+    
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#handleCancel" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 20;"/>
+        <Button text="Add Sub-Contest" onAction="#handleAdd" 
+                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20;"/>
+    </HBox>
+    
+</VBox>

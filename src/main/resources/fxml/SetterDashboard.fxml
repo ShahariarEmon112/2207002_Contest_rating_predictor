@@ -1,188 +1,235 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-            fx:controller="com.contestpredictor.controller.SetterDashboardController"
-            stylesheets="@../css/styles.css">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.contestpredictor.controller.SetterDashboardController"
+            prefWidth="1100" prefHeight="750" style="-fx-background-color: #f5f5f5;">
     
     <!-- Top Header -->
     <top>
-        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #9b59b6; -fx-padding: 15 20;">
-            <Button text="← Back" onAction="#handleBack" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5; -fx-cursor: hand;"/>
-            <Label text="🎯 Setter Dashboard" style="-fx-text-fill: white; -fx-font-size: 22; -fx-font-weight: bold;"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label fx:id="userNameLabel" text="Welcome, Setter" style="-fx-text-fill: white; -fx-font-size: 14;"/>
-            <Button text="Profile" onAction="#handleProfile" style="-fx-background-color: white; -fx-text-fill: #9b59b6; -fx-background-radius: 5; -fx-cursor: hand;"/>
-            <Button text="Logout" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5; -fx-cursor: hand;"/>
-        </HBox>
+        <VBox style="-fx-background-color: linear-gradient(to right, #9b59b6, #8e44ad);">
+            <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-padding: 15 25;">
+                <Button text="← Back" onAction="#handleBack" 
+                        style="-fx-background-color: rgba(255,255,255,0.2); -fx-text-fill: white; -fx-font-size: 13;"/>
+                <Label text="🎯 Setter Dashboard" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="userNameLabel" text="Welcome, Setter" style="-fx-font-size: 14; -fx-text-fill: white;"/>
+                <Button text="Logout" onAction="#handleLogout" 
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+            </HBox>
+            <Label fx:id="statusLabel" text="" style="-fx-text-fill: #f1c40f; -fx-padding: 0 25 10 25;"/>
+        </VBox>
     </top>
     
     <!-- Main Content -->
     <center>
-        <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: #ecf0f1;">
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-padding: 10;">
             
-            <!-- Tab 1: My Created Contests -->
-            <Tab text="📝 My Contests">
-                <VBox spacing="20" style="-fx-padding: 20;">
-                    
+            <!-- Tab 1: My Contests (Contests Set By Me) -->
+            <Tab text="📋 My Contests">
+                <VBox spacing="15" style="-fx-padding: 20;">
                     <HBox alignment="CENTER_LEFT" spacing="15">
-                        <Label text="My Created Selection Contests" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+                        <Label text="Selection Contests Created By You" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <Button text="➕ Create New Contest" onAction="#handleCreateContest" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;"/>
-                        <Button text="🔄 Refresh" onAction="#handleRefreshContests" style="-fx-background-color: #9b59b6; -fx-text-fill: white;"/>
+                        <TextField fx:id="searchMyContestsField" promptText="🔍 Search..." prefWidth="200"/>
+                        <Button text="➕ Create New Contest" onAction="#handleCreateContest" 
+                                style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Button text="🔄 Refresh" onAction="#handleRefreshContests"/>
                     </HBox>
                     
-                    <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
-                        <TableView fx:id="myContestsTable" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="contestCodeCol" text="Code" prefWidth="100"/>
-                                <TableColumn fx:id="contestNameCol" text="Contest Name" prefWidth="250"/>
-                                <TableColumn fx:id="subContestsCol" text="Sub-Contests" prefWidth="100"/>
-                                <TableColumn fx:id="participantsCol" text="Participants" prefWidth="100"/>
-                                <TableColumn fx:id="startDateCol" text="Start Date" prefWidth="120"/>
-                                <TableColumn fx:id="endDateCol" text="End Date" prefWidth="120"/>
-                                <TableColumn fx:id="statusCol" text="Status" prefWidth="80"/>
-                                <TableColumn fx:id="actionsCol" text="Actions" prefWidth="150"/>
-                            </columns>
-                        </TableView>
-                    </VBox>
+                    <TableView fx:id="myContestsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="contestCodeCol" text="Code" prefWidth="100"/>
+                            <TableColumn fx:id="contestNameCol" text="Contest Name" prefWidth="200"/>
+                            <TableColumn fx:id="shareKeyCol" text="Share Key" prefWidth="80"/>
+                            <TableColumn fx:id="subContestsCol" text="Sub-Contests" prefWidth="90"/>
+                            <TableColumn fx:id="participantsCol" text="Participants" prefWidth="90"/>
+                            <TableColumn fx:id="statusCol" text="Status" prefWidth="80"/>
+                            <TableColumn fx:id="createdAtCol" text="Created" prefWidth="120"/>
+                            <TableColumn fx:id="actionsCol" text="Actions" prefWidth="200"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="No contests created yet. Click 'Create New Contest' to start!"/>
+                        </placeholder>
+                    </TableView>
                 </VBox>
             </Tab>
             
-            <!-- Tab 2: Add Sub-Contests -->
-            <Tab text="➕ Add Sub-Contests">
-                <VBox spacing="20" style="-fx-padding: 20;">
-                    
-                    <HBox alignment="CENTER_LEFT" spacing="15">
-                        <Label text="Add Codeforces Contest to Selection Contest" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <!-- Tab 2: Create/Manage Contest -->
+            <Tab text="➕ Create Contest">
+                <ScrollPane fitToWidth="true">
+                    <VBox spacing="20" style="-fx-padding: 30;">
+                        <Label text="Create New Selection Contest" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
+                        
+                        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 8;">
+                            <Label text="Contest Details" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+                            
+                            <VBox spacing="5">
+                                <Label text="Contest Name *"/>
+                                <TextField fx:id="newContestNameField" promptText="e.g., ICPC Selection Round 2026"/>
+                            </VBox>
+                            
+                            <VBox spacing="5">
+                                <Label text="Description (optional)"/>
+                                <TextArea fx:id="newContestDescField" promptText="Description of the selection contest..." 
+                                          prefRowCount="3" wrapText="true"/>
+                            </VBox>
+                            
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <Button text="🎯 Create Selection Contest" onAction="#handleCreateNewContest"
+                                        style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 10 25;"/>
+                                <Label fx:id="createContestMessage" text="" style="-fx-font-size: 12;"/>
+                            </HBox>
+                            
+                            <Separator/>
+                            
+                            <Label text="ℹ️ A unique Share Key will be auto-generated for contestants to find your contest. After creation, you'll be taken to the contest management page to add sub-contests." 
+                                   style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;" wrapText="true"/>
+                        </VBox>
+                    </VBox>
+                </ScrollPane>
+            </Tab>
+            
+            <!-- Tab 3: Manage Sub-Contests -->
+            <Tab text="📝 Manage Sub-Contests">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="Select Contest:"/>
+                        <ComboBox fx:id="subContestSelectionCombo" promptText="Choose a selection contest" prefWidth="300" onAction="#handleContestSelected"/>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Label fx:id="selectedContestKeyLabel" text="" style="-fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
                     </HBox>
                     
-                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10;">
-                        <GridPane hgap="15" vgap="15">
-                            <Label text="Select Selection Contest:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                            <ComboBox fx:id="selectionContestCombo" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                            
-                            <Label text="Codeforces Contest ID:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <TextField fx:id="cfContestIdField" promptText="e.g., 1950" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                            
-                            <Label text="Contest Name:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                            <TextField fx:id="cfContestNameField" promptText="e.g., Codeforces Round 943" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                            
-                            <Label text="Weight (0.1 - 2.0):" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                            <TextField fx:id="weightField" text="1.0" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                            
-                            <Button text="Add Sub-Contest" onAction="#handleAddSubContest" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                        </GridPane>
+                    <Separator/>
+                    
+                    <!-- Add Sub-Contest Section -->
+                    <VBox fx:id="addSubContestSection" spacing="10" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;" managed="false" visible="false">
+                        <Label text="Add Codeforces Contest as Sub-Contest" style="-fx-font-weight: bold;"/>
+                        
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <VBox spacing="3">
+                                <Label text="CF Contest Link / ID *"/>
+                                <TextField fx:id="cfContestLinkField" promptText="https://codeforces.com/contest/1234 or 1234" prefWidth="350"/>
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label text="Weight *"/>
+                                <TextField fx:id="subContestWeightField" text="1.0" promptText="1.0" prefWidth="80"/>
+                            </VBox>
+                            <VBox spacing="3">
+                                <Label text=" "/>
+                                <Button text="➕ Add Sub-Contest" onAction="#handleAddSubContest"
+                                        style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+                            </VBox>
+                        </HBox>
+                        <Label fx:id="addSubContestMessage" text="" style="-fx-font-size: 11;"/>
                     </VBox>
                     
-                    <Label fx:id="addSubContestMessage" text="" style="-fx-font-size: 14;"/>
-                    
-                    <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
-                        <Label text="Sub-Contests in Selected Contest" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
-                        <TableView fx:id="subContestsTable" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="subCfIdCol" text="CF Contest ID" prefWidth="120"/>
-                                <TableColumn fx:id="subNameCol" text="Name" prefWidth="250"/>
-                                <TableColumn fx:id="subWeightCol" text="Weight" prefWidth="80"/>
-                                <TableColumn fx:id="subDateCol" text="Date" prefWidth="120"/>
-                                <TableColumn fx:id="subActionsCol" text="Actions" prefWidth="100"/>
-                            </columns>
-                        </TableView>
-                    </VBox>
+                    <!-- Sub-Contests Table -->
+                    <Label text="Sub-Contests in Selected Contest" style="-fx-font-weight: bold;"/>
+                    <TableView fx:id="subContestsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="subCfIdCol" text="CF ID" prefWidth="80"/>
+                            <TableColumn fx:id="subNameCol" text="Contest Name" prefWidth="250"/>
+                            <TableColumn fx:id="subDateCol" text="Date" prefWidth="120"/>
+                            <TableColumn fx:id="subWeightCol" text="Weight" prefWidth="80"/>
+                            <TableColumn fx:id="subPhaseCol" text="Phase" prefWidth="100"/>
+                            <TableColumn fx:id="subActionsCol" text="Actions" prefWidth="200"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="Select a contest above to view and manage its sub-contests"/>
+                        </placeholder>
+                    </TableView>
                 </VBox>
             </Tab>
             
-            <!-- Tab 3: View All Standings -->
-            <Tab text="🏅 Standings">
-                <VBox spacing="20" style="-fx-padding: 20;">
-                    
-                    <HBox alignment="CENTER_LEFT" spacing="15">
-                        <Label text="Contest Standings" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+            <!-- Tab 4: View Standings -->
+            <Tab text="🏆 Standings">
+                <VBox spacing="15" style="-fx-padding: 20;">
+                    <HBox spacing="15" alignment="CENTER_LEFT">
+                        <Label text="Select Contest:"/>
+                        <ComboBox fx:id="standingsContestCombo" promptText="Choose a contest" prefWidth="300" onAction="#handleLoadStandings"/>
+                        <Button text="🔄 Refresh" onAction="#handleRefreshStandings"/>
                         <Region HBox.hgrow="ALWAYS"/>
-                        <ComboBox fx:id="standingsContestCombo" promptText="Select Contest" prefWidth="300" onAction="#handleLoadStandings"/>
+                        <Label fx:id="standingsInfoLabel" text="" style="-fx-font-style: italic;"/>
                     </HBox>
+                    
+                    <Separator/>
                     
                     <!-- Contest Info Card -->
-                    <HBox spacing="20">
-                        <VBox fx:id="contestInfoCard" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" HBox.hgrow="ALWAYS">
-                            <Label fx:id="selectedContestNameLabel" text="Select a contest to view standings" style="-fx-font-size: 16; -fx-font-weight: bold;"/>
-                            <HBox spacing="30" style="-fx-padding: 10 0;">
-                                <VBox>
-                                    <Label text="Sub-Contests" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
-                                    <Label fx:id="infoSubContestsLabel" text="--" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Participants" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
-                                    <Label fx:id="infoParticipantsLabel" text="--" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
-                                </VBox>
-                                <VBox>
-                                    <Label text="Avg Rating" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
-                                    <Label fx:id="infoAvgRatingLabel" text="--" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
-                                </VBox>
-                            </HBox>
+                    <HBox fx:id="standingsInfoSection" spacing="20" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;" visible="false" managed="false">
+                        <VBox spacing="3">
+                            <Label text="Contest" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+                            <Label fx:id="standingsContestNameLabel" text="--" style="-fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="3">
+                            <Label text="Sub-Contests" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+                            <Label fx:id="standingsSubCountLabel" text="0" style="-fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="3">
+                            <Label text="Participants" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+                            <Label fx:id="standingsParticipantCountLabel" text="0" style="-fx-font-weight: bold;"/>
+                        </VBox>
+                        <VBox spacing="3">
+                            <Label text="Share Key" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+                            <Label fx:id="standingsShareKeyLabel" text="--" style="-fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
                         </VBox>
                     </HBox>
                     
-                    <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
-                        <TableView fx:id="standingsTable" VBox.vgrow="ALWAYS">
-                            <columns>
-                                <TableColumn fx:id="standRankCol" text="Rank" prefWidth="80"/>
-                                <TableColumn fx:id="standUserCol" text="Contestant" prefWidth="200"/>
-                                <TableColumn fx:id="standCfHandleCol" text="CF Handle" prefWidth="150"/>
-                                <TableColumn fx:id="standFinalRatingCol" text="Final Rating" prefWidth="120"/>
-                                <TableColumn fx:id="standRatingChangeCol" text="Change" prefWidth="100"/>
-                            </columns>
-                        </TableView>
-                    </VBox>
+                    <!-- Standings Table -->
+                    <TableView fx:id="standingsTable" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="standRankCol" text="#" prefWidth="50"/>
+                            <TableColumn fx:id="standUserCol" text="Contestant" prefWidth="180"/>
+                            <TableColumn fx:id="standCfHandleCol" text="CF Handle" prefWidth="130"/>
+                            <TableColumn fx:id="standFinalRatingCol" text="Final Rating" prefWidth="100"/>
+                            <TableColumn fx:id="standParticipatedCol" text="Participated" prefWidth="100"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="Select a contest to view standings"/>
+                        </placeholder>
+                    </TableView>
                 </VBox>
             </Tab>
             
-            <!-- Tab 4: Setter Profile -->
+            <!-- Tab 5: Profile -->
             <Tab text="👤 Profile">
-                <VBox spacing="20" style="-fx-padding: 20;" alignment="CENTER">
-                    <VBox style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-max-width: 500;">
-                        <Label text="Profile Settings" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-padding: 0 0 20 0;"/>
+                <VBox spacing="20" style="-fx-padding: 30;">
+                    <Label text="Your Profile" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
+                    
+                    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 8;" maxWidth="500">
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Full Name:" prefWidth="120"/>
+                            <TextField fx:id="profileFullNameField" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Username:" prefWidth="120"/>
+                            <TextField fx:id="profileUsernameField" editable="false" style="-fx-background-color: #ecf0f1;" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Email:" prefWidth="120"/>
+                            <TextField fx:id="profileEmailField" HBox.hgrow="ALWAYS"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Role:" prefWidth="120"/>
+                            <Label fx:id="profileRoleLabel" text="SETTER" style="-fx-font-weight: bold; -fx-text-fill: #9b59b6;"/>
+                        </HBox>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Contests Created:" prefWidth="120"/>
+                            <Label fx:id="profileContestsCreatedLabel" text="0"/>
+                        </HBox>
                         
-                        <GridPane hgap="15" vgap="15">
-                            <Label text="Full Name:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                            <TextField fx:id="profileFullNameField" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                            
-                            <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <TextField fx:id="profileUsernameField" prefWidth="300" editable="false" style="-fx-background-color: #ecf0f1;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                            
-                            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                            <TextField fx:id="profileEmailField" prefWidth="300" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                            
-                            <Label text="Role:" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-                            <Label fx:id="profileRoleLabel" text="Setter" style="-fx-text-fill: #9b59b6; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                            
-                            <Label text="Contests Created:" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-                            <Label fx:id="profileContestsCreatedLabel" text="0" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
-                            
-                            <Label text="Member Since:" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-                            <Label fx:id="profileCreatedAtLabel" text="--" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-                            
-                            <Button text="Save Changes" onAction="#handleSaveProfile" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-                        </GridPane>
+                        <Separator/>
                         
-                        <Label fx:id="profileMessage" text="" style="-fx-padding: 10 0 0 0;"/>
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Button text="💾 Save Changes" onAction="#handleSaveProfile"
+                                    style="-fx-background-color: #9b59b6; -fx-text-fill: white;"/>
+                            <Label fx:id="profileMessage" text=""/>
+                        </HBox>
                     </VBox>
                 </VBox>
             </Tab>
-            
         </TabPane>
     </center>
-    
-    <!-- Status Bar -->
-    <bottom>
-        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #34495e; -fx-padding: 8 20;">
-            <Label fx:id="statusLabel" text="Ready" style="-fx-text-fill: white; -fx-font-size: 12;"/>
-            <Region HBox.hgrow="ALWAYS"/>
-            <Label text="Selection Contest Rating System - Setter Mode" style="-fx-text-fill: #bdc3c7; -fx-font-size: 11;"/>
-        </HBox>
-    </bottom>
 </BorderPane>

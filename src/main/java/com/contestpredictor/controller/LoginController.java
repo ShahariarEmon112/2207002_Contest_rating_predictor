@@ -11,7 +11,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 public class LoginController {
@@ -24,37 +26,47 @@ public class LoginController {
 
     @FXML
     private Label errorLabel;
+    
+    @FXML
+    private RadioButton contestantRadio;
+    
+    @FXML
+    private RadioButton setterRadio;
+    
+    private ToggleGroup loginTypeGroup;
 
     @FXML
     private void handleLogin() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
+        boolean loginAsSetter = setterRadio.isSelected();
 
         if (username.isEmpty() || password.isEmpty()) {
             showError("Please enter both username and password");
             return;
         }
 
-        // Check user login (both Setter and Contestant)
+        // Check user login
         UserDatabase userDB = UserDatabase.getInstance();
         User user = userDB.authenticate(username, password);
 
         if (user != null) {
+            // Verify the user's role matches the selected login type
+            if (loginAsSetter && user.getRole() != UserRole.SETTER) {
+                showError("This account is not registered as a Setter");
+                return;
+            }
+            if (!loginAsSetter && user.getRole() == UserRole.SETTER) {
+                showError("This is a Setter account. Please select 'Setter' to login.");
+                return;
+            }
+            
             // Route based on user role
             if (user.getRole() == UserRole.SETTER) {
                 navigateToSetterDashboard(user);
             } else {
                 navigateToContestantDashboard(user);
             }
-            return;
-        }
-        
-        // Check admin login (fallback for existing admins)
-        AdminDatabase adminDB = AdminDatabase.getInstance();
-        Admin admin = adminDB.authenticate(username, password);
-        
-        if (admin != null) {
-            navigateToAdminDashboard(admin);
             return;
         }
 
@@ -131,6 +143,12 @@ public class LoginController {
 
     @FXML
     private void initialize() {
+        // Setup login type toggle group
+        loginTypeGroup = new ToggleGroup();
+        contestantRadio.setToggleGroup(loginTypeGroup);
+        setterRadio.setToggleGroup(loginTypeGroup);
+        contestantRadio.setSelected(true); // Default to contestant
+        
         // Add enter key handler for password field
         passwordField.setOnAction(event -> handleLogin());
         usernameField.setOnAction(event -> passwordField.requestFocus());
