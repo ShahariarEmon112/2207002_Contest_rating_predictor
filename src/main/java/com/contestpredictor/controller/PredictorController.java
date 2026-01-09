@@ -254,6 +254,15 @@ public class PredictorController {
             stage.setScene(scene);
             stage.setTitle(title + " - Contest Rating Predictor");
             
+            // If navigating to RatingPredictor, set admin status
+            if (fxmlPath.contains("RatingPredictor")) {
+                RatingPredictorController controller = loader.getController();
+                if (controller != null) {
+                    boolean isAdmin = currentUser != null && currentUser.getUsername().equals("admin");
+                    controller.setAdminStatus(isAdmin);
+                }
+            }
+            
             // Restore window state
             if (wasMaximized) {
                 stage.setMaximized(true);

@@ -1,0 +1,15 @@
+{
+    "css.lint.compatibleVendorPrefixes": "ignore",
+    "css.lint.vendorPrefix": "ignore",
+    "css.lint.universalSelector": "ignore",
+    "css.lint.zeroUnits": "ignore",
+    "css.validate": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": false,
+    "[css]": {
+        "editor.defaultFormatter": null
+    },
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.saveActionsOnOrganizeImports": ["addMissingOverride", "addMissingDeprecated"],
+    "extensions.ignoreRecommendations": false
+}

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane styleClass="user-leaderboard-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.UserLeaderboardController">
+    
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="70" spacing="20" styleClass="navbar">
+            <padding>
+                <Insets bottom="10" left="30" right="30" top="10" />
+            </padding>
+            
+            <Label styleClass="navbar-brand" text="🎯 KUET Team Formation Contest Leaderboard">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <Button fx:id="backButton" onAction="#handleBack" styleClass="navbar-button" text="← Back to Profile">
+                <font><Font name="System Bold" size="14" /></font>
+            </Button>
+        </HBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scroll-pane">
+            <TabPane fx:id="tabPane" styleClass="tab-pane" tabClosingPolicy="UNAVAILABLE">
+                
+                <!-- Available Contests Tab -->
+                <Tab text="Available Contests">
+                    <VBox spacing="20" styleClass="leaderboard-tab-content">
+                        <padding>
+                            <Insets bottom="30" left="30" right="30" top="30" />
+                        </padding>
+                        
+                        <Label styleClass="section-title" text="🏆 Available Contests for Registration">
+                            <font><Font name="System Bold" size="18" /></font>
+                        </Label>
+                        
+                        <ListView fx:id="availableContestsListView" prefHeight="250" />
+                        
+                        <Label fx:id="selectedContestLabel" styleClass="info-label" text="No contest selected">
+                            <font><Font size="12" /></font>
+                        </Label>
+                        
+                        <HBox spacing="10">
+                            <Button fx:id="registerButton" onAction="#handleRegisterForContest" styleClass="button-success" text="✅ Register for Contest" prefWidth="200" />
+                            <Button fx:id="unregisterButton" onAction="#handleUnregisterFromContest" styleClass="button-danger" text="❌ Unregister" prefWidth="150" />
+                            <Button fx:id="viewStandingsButton" onAction="#handleViewStandings" styleClass="button-primary" text="📊 View Standings" prefWidth="150" />
+                        </HBox>
+                    </VBox>
+                </Tab>
+                
+                <!-- My Registrations Tab -->
+                <Tab text="My Registrations">
+                    <VBox spacing="20" styleClass="leaderboard-tab-content">
+                        <padding>
+                            <Insets bottom="30" left="30" right="30" top="30" />
+                        </padding>
+                        
+                        <Label fx:id="myRegistrationsLabel" styleClass="section-title" text="📝 My Registrations">
+                            <font><Font name="System Bold" size="18" /></font>
+                        </Label>
+                        
+                        <ListView fx:id="registeredContestsListView" prefHeight="250" />
+                    </VBox>
+                </Tab>
+                
+                <!-- Contest Standings Tab -->
+                <Tab text="Contest Standings">
+                    <VBox spacing="20" styleClass="leaderboard-tab-content">
+                        <padding>
+                            <Insets bottom="30" left="30" right="30" top="30" />
+                        </padding>
+                        
+                        <Label styleClass="section-title" text="📊 Contest Standings">
+                            <font><Font name="System Bold" size="18" /></font>
+                        </Label>
+                        
+                        <HBox spacing="15" alignment="CENTER_LEFT">
+                            <Label text="Select Contest:" styleClass="field-label">
+                                <font><Font name="System Bold" size="14" /></font>
+                            </Label>
+                            <ComboBox fx:id="contestStandingsComboBox" prefWidth="300" promptText="Choose a contest to view standings..." />
+                        </HBox>
+                        
+                        <TableView fx:id="contestStandingsTable" prefHeight="400">
+                            <columns>
+                                <TableColumn fx:id="rankColumn" prefWidth="80" text="Rank" />
+                                <TableColumn fx:id="usernameColumn" prefWidth="150" text="Username" />
+                                <TableColumn fx:id="solveCountColumn" prefWidth="100" text="Solves" />
+                                <TableColumn fx:id="penaltyColumn" prefWidth="100" text="Penalty" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
+                
+                <!-- Combined Leaderboard Tab -->
+                <Tab text="Overall Leaderboard">
+                    <VBox spacing="20" styleClass="leaderboard-tab-content">
+                        <padding>
+                            <Insets bottom="30" left="30" right="30" top="30" />
+                        </padding>
+                        
+                        <Label styleClass="section-title" text="🥇 KUET Team Formation Overall Leaderboard">
+                            <font><Font name="System Bold" size="18" /></font>
+                        </Label>
+                        
+                        <Label styleClass="info-label" text="Rankings combined from all finalized contests based on total solves and penalty">
+                            <font><Font size="12" /></font>
+                        </Label>
+                        
+                        <TableView fx:id="combinedLeaderboardTable" prefHeight="450">
+                            <columns>
+                                <TableColumn fx:id="overallRankColumn" prefWidth="70" text="Rank" />
+                                <TableColumn fx:id="userColumn" prefWidth="150" text="Username" />
+                                <TableColumn fx:id="totalSolvesColumn" prefWidth="100" text="Total Solves" />
+                                <TableColumn fx:id="totalPenaltyColumn" prefWidth="120" text="Total Penalty" />
+                                <TableColumn fx:id="contestsParticipatedColumn" prefWidth="130" text="Contests Participated" />
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </Tab>
+            </TabPane>
+        </ScrollPane>
+    </center>
+</BorderPane>

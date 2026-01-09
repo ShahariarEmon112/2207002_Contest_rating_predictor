@@ -41,6 +41,7 @@ public class RatingPredictorController {
     @FXML private Label maxLossLabel;
     
     private ObservableList<Contestant> contestants;
+    private boolean isAdmin = false; // Flag to track if current user is admin
     
     @FXML
     public void initialize() {
@@ -55,18 +56,28 @@ public class RatingPredictorController {
         deltaColumn.setCellValueFactory(new PropertyValueFactory<>("delta"));
         newRatingColumn.setCellValueFactory(new PropertyValueFactory<>("newRating"));
         
-        // Make problems solved column editable with dynamic recalculation
+        // Make problems solved column editable only for admins
         problemsSolvedColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         problemsSolvedColumn.setOnEditCommit(event -> {
+            if (!isAdmin) {
+                showAlert("Access Denied", "Only admins can update problems solved. This is a read-only field for users.");
+                event.consume();
+                return;
+            }
             Contestant contestant = event.getRowValue();
             contestant.setProblemsSolved(event.getNewValue());
             recalculateRankingsAndRatings();
             updateStatus("Problems solved updated for " + contestant.getHandle() + " - Rankings recalculated");
         });
         
-        // Make penalty column editable with dynamic recalculation
+        // Make penalty column editable only for admins
         penaltyColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         penaltyColumn.setOnEditCommit(event -> {
+            if (!isAdmin) {
+                showAlert("Access Denied", "Only admins can update penalty. This is a read-only field for users.");
+                event.consume();
+                return;
+            }
             Contestant contestant = event.getRowValue();
             contestant.setPenalty(event.getNewValue());
             recalculateRankingsAndRatings();
@@ -98,11 +109,28 @@ public class RatingPredictorController {
         });
         
         contestantsTable.setItems(contestants);
-        contestantsTable.setEditable(true);
+        contestantsTable.setEditable(false); // Start as read-only, will be enabled for admins
         
         // Set default limit
         limitField.setText("100");
     }
+    
+    /**
+     * Set admin status - call this to enable/disable editing
+     */
+    public void setAdminStatus(boolean admin) {
+        this.isAdmin = admin;
+        
+        // Update table editable state
+        if (isAdmin) {
+            contestantsTable.setEditable(true);
+            updateStatus("Admin mode: You can now edit problems solved and penalty");
+        } else {
+            contestantsTable.setEditable(false);
+            updateStatus("User mode: Problem count and penalty are read-only");
+        }
+    }
+    
     
     @FXML
     private void handleFetchContestants() {

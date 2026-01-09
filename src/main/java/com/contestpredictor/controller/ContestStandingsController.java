@@ -3,9 +3,12 @@ package com.contestpredictor.controller;
 import com.contestpredictor.data.ContestDatabase;
 import com.contestpredictor.data.DatabaseManager;
 import com.contestpredictor.data.UserDatabase;
+import com.contestpredictor.data.LeaderboardDatabase;
 import com.contestpredictor.model.Contest;
 import com.contestpredictor.model.Participant;
 import com.contestpredictor.model.User;
+import com.contestpredictor.model.LeaderboardContest;
+import com.contestpredictor.model.LeaderboardEntry;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,6 +55,8 @@ public class ContestStandingsController {
     
     private String currentUsername;
     private boolean isAdmin = false;
+    private boolean isLeaderboardContest = false;
+    private String currentContestId = null;
     
     @FXML
     public void initialize() {
@@ -140,13 +145,21 @@ public class ContestStandingsController {
     private void loadContests() {
         ContestDatabase contestDB = ContestDatabase.getInstance();
         List<Contest> contests = contestDB.getAllContests();
+        LeaderboardDatabase leaderboardDB = LeaderboardDatabase.getInstance();
+        List<LeaderboardContest> leaderboardContests = leaderboardDB.getAllLeaderboardContests();
         
         ObservableList<String> contestNames = FXCollections.observableArrayList();
+        
+        // Add regular contests
         for (Contest contest : contests) {
-            // Admin sees all contests (past and future)
-            // Users also see all contests but can only register for future ones
             String status = contest.isPast() ? " [Past]" : " [Upcoming]";
             contestNames.add(contest.getContestId() + " - " + contest.getContestName() + status);
+        }
+        
+        // Add KUET Leaderboard contests
+        for (LeaderboardContest contest : leaderboardContests) {
+            String status = contest.isStandings_finalized() ? " [Finalized]" : " [Active]";
+            contestNames.add("KUET:" + contest.getContestId() + " - " + contest.getContestName() + status);
         }
         
         contestSelector.setItems(contestNames);
@@ -163,9 +176,62 @@ public class ContestStandingsController {
         String selected = contestSelector.getValue();
         if (selected == null) return;
         
+        // Check if this is a KUET Leaderboard contest
+        isLeaderboardContest = selected.startsWith("KUET:");
+        
         // Extract contest ID (before first " - ")
         String contestId = selected.split(" - ")[0];
-        loadContestStandings(contestId);
+        if (isLeaderboardContest) {
+            contestId = contestId.substring(5); // Remove "KUET:" prefix
+        }
+        currentContestId = contestId;
+        
+        if (isLeaderboardContest) {
+            loadLeaderboardContestStandings(contestId);
+        } else {
+            loadContestStandings(contestId);
+        }
+    }
+    
+    private void loadLeaderboardContestStandings(String contestId) {
+        LeaderboardDatabase leaderboardDB = LeaderboardDatabase.getInstance();
+        LeaderboardContest contest = leaderboardDB.getLeaderboardContestById(contestId);
+        
+        if (contest == null) return;
+        
+        contestTitleLabel.setText("🏆 KUET: " + contest.getContestName());
+        List<String> registeredUsers = leaderboardDB.getRegisteredUsersForContest(contestId);
+        contestInfoLabel.setText(String.format("Max Problems: %d | Registered Users: %d | Status: %s", 
+            contest.getMaxProblems(), registeredUsers.size(), 
+            contest.isStandings_finalized() ? "Finalized" : "Active"));
+        
+        // Load leaderboard entries as participants
+        List<LeaderboardEntry> entries = leaderboardDB.getContestStandings(contestId);
+        List<Participant> participants = new ArrayList<>();
+        
+        for (LeaderboardEntry entry : entries) {
+            Participant p = new Participant(entry.getUsername(), 0, // Rating not used in leaderboard contests
+                entry.getSolveCount(), entry.getTotalPenalty());
+            p.setRank(entry.getRank());
+            p.setPredictedRating(0);
+            p.setRatingChange(0);
+            participants.add(p);
+        }
+        
+        // Add registered users who don't have entries yet
+        for (String username : registeredUsers) {
+            boolean hasEntry = participants.stream().anyMatch(p -> p.getUsername().equals(username));
+            if (!hasEntry) {
+                Participant p = new Participant(username, 0, 0, 0);
+                p.setRank(participants.size() + 1);
+                p.setPredictedRating(0);
+                p.setRatingChange(0);
+                participants.add(p);
+            }
+        }
+        
+        ObservableList<Participant> observableParticipants = FXCollections.observableArrayList(participants);
+        standingsTable.setItems(observableParticipants);
     }
     
     private void loadContestStandings(String contestId) {
@@ -254,17 +320,58 @@ public class ContestStandingsController {
             return;
         }
         
-        String contestId = selected.split(" - ")[0];
-        
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Generate Contest");
         confirmation.setHeaderText("Generate Contest Results");
-        confirmation.setContentText("This will calculate rankings and rating changes based on current solve counts. Continue?");
+        
+        if (isLeaderboardContest) {
+            confirmation.setContentText("This will recalculate rankings for KUET Leaderboard contest. Continue?");
+        } else {
+            confirmation.setContentText("This will calculate rankings and rating changes based on current solve counts. Continue?");
+        }
         
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            generateContestResults(contestId);
+            if (isLeaderboardContest) {
+                generateLeaderboardContestResults();
+            } else {
+                generateContestResults(currentContestId);
+            }
         }
+    }
+    
+    private void generateLeaderboardContestResults() {
+        ObservableList<Participant> participants = standingsTable.getItems();
+        LeaderboardDatabase leaderboardDB = LeaderboardDatabase.getInstance();
+        
+        // Sort by problems solved (desc), then by penalty (asc)
+        List<Participant> sortedList = new ArrayList<>(participants);
+        sortedList.sort((p1, p2) -> {
+            if (p1.getProblemsSolved() != p2.getProblemsSolved()) {
+                return Integer.compare(p2.getProblemsSolved(), p1.getProblemsSolved());
+            }
+            return Integer.compare(p1.getTotalPenalty(), p2.getTotalPenalty());
+        });
+        
+        // Assign ranks and save to leaderboard database
+        for (int i = 0; i < sortedList.size(); i++) {
+            Participant p = sortedList.get(i);
+            p.setRank(i + 1);
+            
+            LeaderboardEntry entry = new LeaderboardEntry(
+                p.getUsername(),
+                currentContestId,
+                p.getRank(),
+                p.getProblemsSolved(),
+                p.getTotalPenalty(),
+                0
+            );
+            leaderboardDB.addLeaderboardEntry(entry);
+        }
+        
+        // Refresh table
+        standingsTable.setItems(FXCollections.observableArrayList(sortedList));
+        showAlert("Success", "KUET Leaderboard contest rankings updated successfully!\nUse 'Finalize Standings' in Admin Manage Leaderboard to complete.");
     }
     
     private void generateContestResults(String contestId) {
@@ -325,13 +432,24 @@ public class ContestStandingsController {
     }
     
     private void updateParticipantInDatabase(Participant participant) {
-        String selected = contestSelector.getValue();
-        if (selected == null) return;
-        
-        String contestId = selected.split(" - ")[0];
-        DatabaseManager dbManager = DatabaseManager.getInstance();
-        dbManager.updateParticipantSolveCount(contestId, participant.getUsername(), 
-            participant.getProblemsSolved(), participant.getTotalPenalty());
+        if (isLeaderboardContest) {
+            // Update in leaderboard database
+            LeaderboardDatabase leaderboardDB = LeaderboardDatabase.getInstance();
+            LeaderboardEntry entry = new LeaderboardEntry(
+                participant.getUsername(),
+                currentContestId,
+                participant.getRank(),
+                participant.getProblemsSolved(),
+                participant.getTotalPenalty(),
+                0 // time not tracked in this view
+            );
+            leaderboardDB.addLeaderboardEntry(entry);
+        } else {
+            // Update in regular contest database
+            DatabaseManager dbManager = DatabaseManager.getInstance();
+            dbManager.updateParticipantSolveCount(currentContestId, participant.getUsername(), 
+                participant.getProblemsSolved(), participant.getTotalPenalty());
+        }
     }
     
     private void handleRemoveParticipant(Participant participant) {
@@ -372,6 +490,26 @@ public class ContestStandingsController {
         String selected = contestSelector.getValue();
         if (selected == null) {
             showAlert("Error", "Please select a contest first");
+            return;
+        }
+        
+        // Handle KUET Leaderboard contest registration
+        if (isLeaderboardContest) {
+            LeaderboardDatabase leaderboardDB = LeaderboardDatabase.getInstance();
+            
+            // Check if already registered
+            if (leaderboardDB.isUserRegisteredForContest(currentContestId, currentUsername)) {
+                showAlert("Info", "You are already registered for this KUET Leaderboard contest!");
+                return;
+            }
+            
+            // Register user
+            if (leaderboardDB.registerUserForLeaderboardContest(currentContestId, currentUsername)) {
+                showAlert("Success", "You have been registered for this KUET Leaderboard contest!");
+                handleRefresh();
+            } else {
+                showAlert("Error", "Failed to register for contest");
+            }
             return;
         }
         

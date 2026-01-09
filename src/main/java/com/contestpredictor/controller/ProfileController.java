@@ -205,4 +205,54 @@ public class ProfileController {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Navigate to the team formation leaderboard
+     */
+    @FXML
+    private void handleViewLeaderboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/UserLeaderboard.fxml"));
+            Parent root = loader.load();
+            
+            UserLeaderboardController controller = loader.getController();
+            User currentUser = UserDatabase.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                controller.setCurrentUsername(currentUser.getUsername());
+            }
+            
+            Stage stage = (Stage) fullNameLabel.getScene().getWindow();
+            
+            // Preserve window state
+            boolean wasFullScreen = stage.isFullScreen();
+            boolean wasMaximized = stage.isMaximized();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            Scene scene = new Scene(root, currentWidth, currentHeight);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setTitle("KUET Team Formation Contest Leaderboard");
+            
+            // Restore window state
+            if (wasMaximized) {
+                stage.setMaximized(true);
+            }
+            if (wasFullScreen) {
+                stage.setFullScreen(true);
+            }
+        } catch (Exception e) {
+            System.err.println("ERROR in handleViewLeaderboard:");
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Set user for profile display
+     */
+    public void setUser(User user) {
+        UserDatabase.getInstance().setCurrentUser(user);
+        loadUserProfile();
+    }
 }

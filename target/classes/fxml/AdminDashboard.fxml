@@ -17,6 +17,8 @@
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button text="📊 Manage Standings" onAction="#handleManageStandings" 
                         style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
+                <Button text="🎯 Leaderboard" onAction="#handleManageLeaderboard" 
+                        style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
                 <Label fx:id="adminNameLabel" text="Admin" style="-fx-text-fill: white; -fx-font-size: 16; -fx-font-weight: bold;"/>
                 <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" 
                         style="-fx-background-color: white; -fx-text-fill: #ff9800; -fx-font-weight: bold; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 10 20;"/>
@@ -161,6 +163,17 @@
                     </GridPane>
                     
                     <Button text="Refresh Statistics" onAction="#handleRefreshStats" styleClass="primary-button" style="-fx-font-size: 16; -fx-padding: 15 30;"/>
+                </VBox>
+            </Tab>
+            
+            <!-- Tab 4: Team Formation Leaderboard -->
+            <Tab text="🎯 KUET Team Formation Leaderboard">
+                <VBox spacing="20" style="-fx-padding: 30;" alignment="TOP_CENTER">
+                    
+                    <Label text="KUET Team Formation Contest Leaderboard Management" style="-fx-font-size: 20; -fx-font-weight: bold;"/>
+                    <Label text="Create leaderboard contests, manage registrations, and finalize standings" style="-fx-font-size: 12; -fx-text-fill: #666;"/>
+                    
+                    <Button text="➕ Manage Leaderboard Contests" onAction="#handleManageLeaderboard" style="-fx-font-size: 14; -fx-padding: 15 30; -fx-background-color: #9C27B0; -fx-text-fill: white; -fx-background-radius: 5; -fx-cursor: hand;" prefWidth="300"/>
                 </VBox>
             </Tab>
             

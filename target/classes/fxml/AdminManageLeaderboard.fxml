@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane styleClass="admin-leaderboard-root" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.contestpredictor.controller.AdminManageLeaderboardController">
+    
+    <!-- Top Navigation Bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="70" spacing="20" styleClass="navbar">
+            <padding>
+                <Insets bottom="10" left="30" right="30" top="10" />
+            </padding>
+            
+            <Label styleClass="navbar-brand" text="🎯 KUET Team Formation Contest Leaderboard">
+                <font>
+                    <Font name="System Bold" size="20" />
+                </font>
+            </Label>
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <Button fx:id="createContestButton" onAction="#handleCreateContest" styleClass="navbar-button-success" text="➕ New Contest">
+                <font><Font name="System Bold" size="14" /></font>
+            </Button>
+            
+            <Button fx:id="backButton" onAction="#handleBack" styleClass="navbar-button" text="← Back to Dashboard">
+                <font><Font name="System Bold" size="14" /></font>
+            </Button>
+        </HBox>
+    </top>
+    
+    <!-- Main Content -->
+    <center>
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="scroll-pane">
+            <VBox spacing="20" styleClass="admin-leaderboard-content">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+                
+                <!-- Contests Section -->
+                <VBox spacing="10" styleClass="section-box">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label styleClass="section-title" text="Contests">
+                            <font><Font name="System Bold" size="18" /></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="refreshContestsButton" onAction="#handleRefreshContests" styleClass="button-info" text="🔄 Refresh">
+                            <font><Font name="System Bold" size="12" /></font>
+                        </Button>
+                    </HBox>
+                    
+                    <ListView fx:id="contestsListView" prefHeight="200" minHeight="150" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+                    
+                    <Label fx:id="selectedContestLabel" styleClass="info-label" text="No contest selected">
+                        <font><Font size="12" /></font>
+                    </Label>
+                </VBox>
+                
+                <!-- Registered Users Section -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label fx:id="registeredUsersCountLabel" styleClass="section-title" text="Registered Users (0)">
+                        <font><Font name="System Bold" size="18" /></font>
+                    </Label>
+                    
+                    <Label styleClass="info-label" text="Click on a user to auto-fill their username below">
+                        <font><Font size="12" /></font>
+                    </Label>
+                    
+                    <ListView fx:id="registeredUsersListView" prefHeight="150" minHeight="100" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;" />
+                </VBox>
+                
+                <!-- Contest Standings Section -->
+                <VBox spacing="10" styleClass="section-box">
+                    <Label styleClass="section-title" text="Contest Standings">
+                        <font><Font name="System Bold" size="18" /></font>
+                    </Label>
+                    
+                    <HBox styleClass="info-banner">
+                        <padding>
+                            <Insets bottom="10" left="15" right="15" top="10" />
+                        </padding>
+                        <Label styleClass="info-text" text="💡 Quick Edit: Double-click on 'Solves' or 'Penalty' cells to edit values directly. Changes save automatically and rankings update." wrapText="true">
+                            <font><Font size="12" /></font>
+                        </Label>
+                    </HBox>
+                    
+                    <TableView fx:id="standingsTable" prefHeight="250" minHeight="200" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-radius: 5;">
+                        <columns>
+                            <TableColumn fx:id="rankColumn" prefWidth="80" text="Rank" />
+                            <TableColumn fx:id="usernameColumn" prefWidth="150" text="Username" />
+                            <TableColumn fx:id="solveCountColumn" prefWidth="100" text="Solves" />
+                            <TableColumn fx:id="penaltyColumn" prefWidth="100" text="Penalty" />
+                        </columns>
+                    </TableView>
+                </VBox>
+                
+                <!-- Add/Update Entry Section -->
+                <VBox spacing="15" styleClass="section-box">
+                    <Label styleClass="section-title" text="Manage Entry Standings">
+                        <font><Font name="System Bold" size="18" /></font>
+                    </Label>
+                    
+                    <Label styleClass="info-label" text="💡 Two ways to update: 1) Double-click cells in the table above to edit directly, or 2) Select a user below and enter scores here">
+                        <font><Font size="12" /></font>
+                    </Label>
+                    
+                    <GridPane hgap="15" vgap="15">
+                        <columnConstraints>
+                            <ColumnConstraints prefWidth="150" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+                        
+                        <Label text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <font><Font name="System Bold" size="13" /></font>
+                        </Label>
+                        <TextField fx:id="usernameField" promptText="Select from registered users above" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        
+                        <Label text="Solve Count:" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <font><Font name="System Bold" size="13" /></font>
+                        </Label>
+                        <TextField fx:id="solveCountField" promptText="Number of problems solved" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        
+                        <Label text="Penalty:" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                            <font><Font name="System Bold" size="13" /></font>
+                        </Label>
+                        <TextField fx:id="penaltyField" promptText="Total penalty in minutes" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        
+                        <Label text="Time (minutes):" GridPane.columnIndex="0" GridPane.rowIndex="3">
+                            <font><Font name="System Bold" size="13" /></font>
+                        </Label>
+                        <TextField fx:id="timeField" promptText="Time taken in minutes" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                  <rowConstraints>
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                     <RowConstraints />
+                  </rowConstraints>
+                    </GridPane>
+                    
+                    <HBox spacing="10">
+                        <Button fx:id="addEntryButton" onAction="#handleAddEntry" styleClass="button-success" text="➕ Add Entry" />
+                        <Button fx:id="updateEntryButton" onAction="#handleUpdateEntry" styleClass="button-warning" text="✏️ Update Entry" />
+                        <Button fx:id="deleteEntryButton" onAction="#handleDeleteEntry" styleClass="button-danger" text="🗑️ Delete Entry" />
+                        <Button fx:id="viewCombinedButton" onAction="#handleViewCombinedLeaderboard" styleClass="button-info" text="🏆 View Overall Leaderboard" />
+                        <Button fx:id="finalizeButton" onAction="#handleFinalizeStandings" styleClass="button-primary" text="✅ Finalize Standings" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

@@ -7,6 +7,7 @@ import com.contestpredictor.model.Admin;
 import com.contestpredictor.model.Contest;
 import com.contestpredictor.model.Participant;
 import com.contestpredictor.model.User;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -264,7 +265,12 @@ public class AdminDashboardController {
                 handleClearForm();
                 loadContests();
                 loadContestSelectors();
+                
+                // Force update statistics to refresh the count immediately
                 updateStatistics();
+                
+                // Log for debugging
+                System.out.println("Contest created successfully. Statistics updated.");
             } else {
                 showAlert("Error", "Failed to create contest. Contest ID may already exist.");
             }
@@ -561,41 +567,48 @@ public class AdminDashboardController {
     }
     
     private void updateStatistics() {
-        try {
-            ContestDatabase contestDB = ContestDatabase.getInstance();
-            UserDatabase userDB = UserDatabase.getInstance();
-            DatabaseManager dbManager = DatabaseManager.getInstance();
-            
-            List<Contest> allContests = contestDB.getAllContests();
-            
-            if (totalContestsLabel != null) {
-                totalContestsLabel.setText(String.valueOf(allContests.size()));
-            }
-            
-            long futureCount = allContests.stream().filter(c -> !c.isPast()).count();
-            if (futureContestsLabel != null) {
-                futureContestsLabel.setText(String.valueOf(futureCount));
-            }
-            
-            // Count total users
-            if (totalUsersLabel != null) {
-                int userCount = userDB.getAllUsers().size();
-                totalUsersLabel.setText(String.valueOf(userCount));
-            }
-            
-            // Count total participants across all contests
-            if (totalParticipantsLabel != null) {
-                int totalParticipants = 0;
-                for (Contest contest : allContests) {
-                    totalParticipants += dbManager.getParticipantsByContest(contest.getContestId()).size();
+        Platform.runLater(() -> {
+            try {
+                ContestDatabase contestDB = ContestDatabase.getInstance();
+                UserDatabase userDB = UserDatabase.getInstance();
+                DatabaseManager dbManager = DatabaseManager.getInstance();
+                
+                List<Contest> allContests = contestDB.getAllContests();
+                
+                if (totalContestsLabel != null) {
+                    int contestCount = allContests.size();
+                    totalContestsLabel.setText(String.valueOf(contestCount));
+                    System.out.println("Updated Total Contests to: " + contestCount);
                 }
-                totalParticipantsLabel.setText(String.valueOf(totalParticipants));
+                
+                long futureCount = allContests.stream().filter(c -> !c.isPast()).count();
+                if (futureContestsLabel != null) {
+                    futureContestsLabel.setText(String.valueOf(futureCount));
+                    System.out.println("Updated Future Contests to: " + futureCount);
+                }
+                
+                // Count total users
+                if (totalUsersLabel != null) {
+                    int userCount = userDB.getAllUsers().size();
+                    totalUsersLabel.setText(String.valueOf(userCount));
+                    System.out.println("Updated Total Users to: " + userCount);
+                }
+                
+                // Count total participants across all contests
+                if (totalParticipantsLabel != null) {
+                    int totalParticipants = 0;
+                    for (Contest contest : allContests) {
+                        totalParticipants += dbManager.getParticipantsByContest(contest.getContestId()).size();
+                    }
+                    totalParticipantsLabel.setText(String.valueOf(totalParticipants));
+                    System.out.println("Updated Total Participants to: " + totalParticipants);
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Error updating statistics: " + e.getMessage());
+                e.printStackTrace();
             }
-            
-        } catch (Exception e) {
-            System.err.println("Error updating statistics: " + e.getMessage());
-            e.printStackTrace();
-        }
+        });
     }
     
     private void showAlert(String title, String content) {
@@ -612,5 +625,52 @@ public class AdminDashboardController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    
+    /**
+     * Handle navigation to leaderboard management
+     */
+    @FXML
+    public void handleManageLeaderboard() {
+        try {
+            // Verify resource exists before loading
+            java.net.URL fxmlResource = getClass().getResource("/fxml/AdminManageLeaderboard.fxml");
+            if (fxmlResource == null) {
+                showAlert("Error", "Cannot find AdminManageLeaderboard.fxml in resources. " +
+                        "Please ensure the file exists in src/main/resources/fxml/");
+                return;
+            }
+            
+            FXMLLoader loader = new FXMLLoader(fxmlResource);
+            Parent root = loader.load();
+            
+            AdminManageLeaderboardController controller = loader.getController();
+            if (controller == null) {
+                showAlert("Error", "Failed to load AdminManageLeaderboardController. " +
+                        "Check that the controller class is properly defined.");
+                return;
+            }
+            
+            controller.setAdminUsername(currentAdmin.getUsername());
+            
+            Stage stage = (Stage) adminNameLabel.getScene().getWindow();
+            
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            
+            // Load stylesheet
+            java.net.URL stylesheetResource = getClass().getResource("/css/styles.css");
+            if (stylesheetResource != null) {
+                scene.getStylesheets().add(stylesheetResource.toExternalForm());
+            }
+            
+            stage.setTitle("KUET Team Formation Contest Leaderboard - Admin Panel");
+            stage.setScene(scene);
+        } catch (Exception e) {
+            System.err.println("Full stack trace:");
+            e.printStackTrace();
+            System.err.println("Error message: " + e.getMessage());
+            showAlert("Error", "Failed to open leaderboard management: " + e.getClass().getSimpleName() + 
+                    " - " + e.getMessage());
+        }
     }
 }

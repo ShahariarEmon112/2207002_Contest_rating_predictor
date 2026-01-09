@@ -36,6 +36,13 @@ public class DatabaseManager {
     }
 
     /**
+     * Get the database connection
+     */
+    public Connection getConnection() {
+        return connection;
+    }
+
+    /**
      * Initialize database tables
      */
     private void initializeTables() {
@@ -109,6 +116,56 @@ public class DatabaseManager {
                     "delta INTEGER NOT NULL," +
                     "contest_date TEXT NOT NULL," +
                     "FOREIGN KEY (contest_id) REFERENCES contests(contest_id)" +
+                    ")");
+            
+            // Leaderboard Contests table
+            stmt.execute("CREATE TABLE IF NOT EXISTS leaderboard_contests (" +
+                    "contest_id TEXT PRIMARY KEY," +
+                    "contest_name TEXT NOT NULL," +
+                    "description TEXT," +
+                    "start_date TEXT NOT NULL," +
+                    "end_date TEXT NOT NULL," +
+                    "max_problems INTEGER NOT NULL," +
+                    "is_active INTEGER DEFAULT 1," +
+                    "standings_finalized INTEGER DEFAULT 0," +
+                    "created_by_admin TEXT NOT NULL," +
+                    "created_at TEXT NOT NULL" +
+                    ")");
+            
+            // Leaderboard Registrations table
+            stmt.execute("CREATE TABLE IF NOT EXISTS leaderboard_registrations (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "contest_id TEXT NOT NULL," +
+                    "username TEXT NOT NULL," +
+                    "registered_at TEXT NOT NULL," +
+                    "FOREIGN KEY (contest_id) REFERENCES leaderboard_contests(contest_id)," +
+                    "UNIQUE(contest_id, username)" +
+                    ")");
+            
+            // Leaderboard Entries table (individual contest standings)
+            stmt.execute("CREATE TABLE IF NOT EXISTS leaderboard_entries (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "contest_id TEXT NOT NULL," +
+                    "username TEXT NOT NULL," +
+                    "rank INTEGER NOT NULL," +
+                    "solve_count INTEGER NOT NULL," +
+                    "total_penalty INTEGER NOT NULL," +
+                    "total_time INTEGER NOT NULL," +
+                    "status TEXT DEFAULT 'Completed'," +
+                    "FOREIGN KEY (contest_id) REFERENCES leaderboard_contests(contest_id)," +
+                    "UNIQUE(contest_id, username)" +
+                    ")");
+            
+            // Combined Leaderboard table (aggregate across all contests)
+            stmt.execute("CREATE TABLE IF NOT EXISTS combined_leaderboard (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "username TEXT UNIQUE NOT NULL," +
+                    "total_solves INTEGER NOT NULL," +
+                    "total_penalty INTEGER NOT NULL," +
+                    "overall_rank INTEGER NOT NULL," +
+                    "contests_participated INTEGER NOT NULL," +
+                    "status TEXT DEFAULT 'Active'," +
+                    "last_updated TEXT" +
                     ")");
             
             // Create default admin if not exists

@@ -20,7 +20,7 @@ mvn clean javafx:run
 
 ## Features
 
-After login, you'll see **Profile** with 3 options in navbar:
+After login, you'll see **Profile** with options in navbar:
 
 1. **Rating Predictor** - Calculate rating changes
    - Enter total participants & your rank
@@ -37,3 +37,27 @@ After login, you'll see **Profile** with 3 options in navbar:
    - Current rating & color tier
    - Contests participated
    - Max rating achieved
+
+## 🎯 NEW: KUET Team Formation Contest Leaderboard System
+
+A comprehensive leaderboard system for managing team-based contests:
+
+### User Features:
+- **View Available Contests** - Browse all leaderboard contests
+- **Register/Unregister** - Join contests you're interested in
+- **View Standings** - See contestant rankings, solves, and penalties
+- **Overall Leaderboard** - Check your rank across all finalized contests
+
+### Admin Features:
+- **Create Contests** - Set up new team formation contests
+- **Manage Standings** - Add and update participant scores
+- **Finalize Contests** - Lock standings and trigger leaderboard calculation
+- **Combined Leaderboard** - Automatic aggregation of all contest results
+
+### Access Leaderboard:
+- **Users:** Profile → "🏆 Team Leaderboard" button
+- **Admins:** Admin Dashboard → Tab 4 or "🎯 Leaderboard" button
+
+### Documentation:
+- See `LEADERBOARD_SYSTEM_GUIDE.md` for detailed documentation
+- See `LEADERBOARD_QUICK_REFERENCE.md` for quick reference

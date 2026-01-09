@@ -1,3 +1,10 @@
+/*
+ * KUET Contest Rating Predictor - JavaFX Stylesheet
+ * This file uses JavaFX-specific CSS properties (-fx-* prefix)
+ * Standard CSS property warnings are expected and can be safely ignored
+ * https://openjfx.io/javadoc/17/javafx.graphics/javafx/css/CssMetaData.html
+ */
+
 /* ===== ROOT STYLES ===== */
 .root {
     -fx-font-family: "Segoe UI", Arial, sans-serif;
@@ -142,6 +149,22 @@
 .login-button:hover {
     -fx-background-color: linear-gradient(to right, #7C3AED, #9333EA);
     -fx-scale-y: 1.02;
+}
+
+.secondary-button {
+    -fx-background-color: #4B5563;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(75,85,99,0.4), 8, 0, 0, 2);
+}
+
+.secondary-button:hover {
+    -fx-background-color: #5A6B7F;
+}
+
+.secondary-button:pressed {
+    -fx-background-color: #3A4551;
 }
 
 .register-link {
@@ -974,4 +997,151 @@
 
 .security-notice {
     -fx-text-fill: rgba(255,255,255,0.5);
+}
+/* ===== LEADERBOARD STYLES ===== */
+
+/* Admin Leaderboard Styles */
+.admin-leaderboard-root {
+    -fx-background-color: #f5f7fa;
+}
+
+.admin-leaderboard-content {
+    -fx-background-color: #f5f7fa;
+}
+
+.section-box {
+    -fx-background-color: white;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 20;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);
+}
+
+.section-title {
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+}
+
+.info-label {
+    -fx-text-fill: #666;
+    -fx-font-size: 12;
+    -fx-italic: true;
+}
+
+/* Button Styles for Leaderboard */
+.button-success {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button-success:hover {
+    -fx-background-color: #45a049;
+}
+
+.button-warning {
+    -fx-background-color: #ff9800;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button-warning:hover {
+    -fx-background-color: #e68900;
+}
+
+.button-danger {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button-danger:hover {
+    -fx-background-color: #da190b;
+}
+
+.button-info {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button-info:hover {
+    -fx-background-color: #0b7dda;
+}
+
+.button-primary {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.button-primary:hover {
+    -fx-background-color: #0b7dda;
+}
+
+.navbar-button-success {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+}
+
+.navbar-button-success:hover {
+    -fx-background-color: #45a049;
+}
+
+/* User Leaderboard Styles */
+.user-leaderboard-root {
+    -fx-background-color: #f5f7fa;
+}
+
+.leaderboard-tab-content {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Create Contest Dialog */
+.create-contest-root {
+    -fx-background-color: #f5f7fa;
+}
+
+.create-contest-content {
+    -fx-background-color: #f5f7fa;
+}
+
+/* Tab Pane */
+.tab-pane {
+    -fx-background-color: #f5f7fa;
+}
+
+.tab {
+    -fx-background-color: white;
+    -fx-text-fill: #333;
+}
+
+.tab:selected {
+    -fx-background-color: #667eea;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
 }

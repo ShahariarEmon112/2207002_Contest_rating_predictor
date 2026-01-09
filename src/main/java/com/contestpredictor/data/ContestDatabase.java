@@ -189,6 +189,96 @@ public class ContestDatabase {
         Contest random7 = new Contest("CODING_CUP", "Coding Cup Winter Edition", 
             LocalDateTime.of(2026, 1, 24, 16, 0), 120, false);
 
+        // Additional Future Contests from January 15 onwards (up to February 28, 2026)
+        Contest cf_future8 = new Contest("CF932", "Codeforces Round 932 (Div. 2)", 
+            LocalDateTime.of(2026, 1, 29, 17, 35), 120, false);
+        Contest cf_future9 = new Contest("CF933", "Codeforces Round 933 (Div. 1 + Div. 2)", 
+            LocalDateTime.of(2026, 2, 5, 17, 35), 150, false);
+        Contest cf_future10 = new Contest("CF934", "Codeforces Round 934 (Div. 3)", 
+            LocalDateTime.of(2026, 2, 12, 17, 35), 135, false);
+        Contest cf_future11 = new Contest("CF935", "Codeforces Round 935 (Div. 2)", 
+            LocalDateTime.of(2026, 2, 19, 17, 35), 120, false);
+        Contest cf_future12 = new Contest("CF936", "Codeforces Global Round 30", 
+            LocalDateTime.of(2026, 2, 26, 17, 35), 150, false);
+        
+        // Additional AtCoder Contests from January 15 onwards
+        Contest abc_future7 = new Contest("ABC346", "AtCoder Beginner Contest 346", 
+            LocalDateTime.of(2026, 1, 28, 21, 0), 100, false);
+        Contest abc_future8 = new Contest("ABC347", "AtCoder Beginner Contest 347", 
+            LocalDateTime.of(2026, 2, 4, 21, 0), 100, false);
+        Contest abc_future9 = new Contest("ABC348", "AtCoder Beginner Contest 348", 
+            LocalDateTime.of(2026, 2, 11, 21, 0), 100, false);
+        Contest abc_future10 = new Contest("ABC349", "AtCoder Beginner Contest 349", 
+            LocalDateTime.of(2026, 2, 18, 21, 0), 100, false);
+        Contest abc_future11 = new Contest("ABC350", "AtCoder Beginner Contest 350", 
+            LocalDateTime.of(2026, 2, 25, 21, 0), 100, false);
+        
+        Contest arc_future3 = new Contest("ARC173", "AtCoder Regular Contest 173", 
+            LocalDateTime.of(2026, 2, 1, 21, 0), 120, false);
+        Contest arc_future4 = new Contest("ARC174", "AtCoder Regular Contest 174", 
+            LocalDateTime.of(2026, 2, 8, 21, 0), 120, false);
+        Contest arc_future5 = new Contest("ARC175", "AtCoder Regular Contest 175", 
+            LocalDateTime.of(2026, 2, 15, 21, 0), 120, false);
+        Contest arc_future6 = new Contest("ARC176", "AtCoder Regular Contest 176", 
+            LocalDateTime.of(2026, 2, 22, 21, 0), 120, false);
+        
+        Contest agc_future2 = new Contest("AGC070", "AtCoder Grand Contest 070", 
+            LocalDateTime.of(2026, 2, 7, 21, 0), 150, false);
+        Contest agc_future3 = new Contest("AGC071", "AtCoder Grand Contest 071", 
+            LocalDateTime.of(2026, 2, 28, 21, 0), 150, false);
+        
+        // Educational Codeforces from January 15 onwards
+        Contest edu_future4 = new Contest("EDU165", "Educational Codeforces Round 165", 
+            LocalDateTime.of(2026, 1, 30, 17, 35), 135, false);
+        Contest edu_future5 = new Contest("EDU166", "Educational Codeforces Round 166", 
+            LocalDateTime.of(2026, 2, 6, 17, 35), 135, false);
+        Contest edu_future6 = new Contest("EDU167", "Educational Codeforces Round 167", 
+            LocalDateTime.of(2026, 2, 13, 17, 35), 135, false);
+        Contest edu_future7 = new Contest("EDU168", "Educational Codeforces Round 168", 
+            LocalDateTime.of(2026, 2, 20, 17, 35), 135, false);
+        Contest edu_future8 = new Contest("EDU169", "Educational Codeforces Round 169", 
+            LocalDateTime.of(2026, 2, 27, 17, 35), 135, false);
+        
+        // LeetCode Weekly Contests from January 15 onwards
+        Contest lc_future4 = new Contest("LC428", "LeetCode Weekly Contest 428", 
+            LocalDateTime.of(2026, 1, 28, 8, 0), 90, false);
+        Contest lc_future5 = new Contest("LC429", "LeetCode Weekly Contest 429", 
+            LocalDateTime.of(2026, 2, 4, 8, 0), 90, false);
+        Contest lc_future6 = new Contest("LC430", "LeetCode Weekly Contest 430", 
+            LocalDateTime.of(2026, 2, 11, 8, 0), 90, false);
+        Contest lc_future7 = new Contest("LC431", "LeetCode Weekly Contest 431", 
+            LocalDateTime.of(2026, 2, 18, 8, 0), 90, false);
+        Contest lc_future8 = new Contest("LC432", "LeetCode Weekly Contest 432", 
+            LocalDateTime.of(2026, 2, 25, 8, 0), 90, false);
+        
+        // LeetCode Biweekly Contests
+        Contest lc_bweekly1 = new Contest("LC102", "LeetCode Biweekly Contest 102", 
+            LocalDateTime.of(2026, 1, 25, 8, 0), 90, false);
+        Contest lc_bweekly2 = new Contest("LC103", "LeetCode Biweekly Contest 103", 
+            LocalDateTime.of(2026, 2, 8, 8, 0), 90, false);
+        Contest lc_bweekly3 = new Contest("LC104", "LeetCode Biweekly Contest 104", 
+            LocalDateTime.of(2026, 2, 22, 8, 0), 90, false);
+        
+        // Additional random named contests from January 15 onwards
+        Contest random8 = new Contest("WC2026_03", "Winter Challenge 2026 Round 3", 
+            LocalDateTime.of(2026, 1, 26, 14, 0), 120, false);
+        Contest random9 = new Contest("WC2026_04", "Winter Challenge 2026 Round 4", 
+            LocalDateTime.of(2026, 2, 2, 14, 0), 120, false);
+        Contest random10 = new Contest("ALGO_FEB", "Algorithm Masters February", 
+            LocalDateTime.of(2026, 2, 3, 15, 0), 180, false);
+        Contest random11 = new Contest("CP_SPRINT_02", "Competitive Programming Sprint 2", 
+            LocalDateTime.of(2026, 2, 9, 12, 0), 90, false);
+        Contest random12 = new Contest("ICPC_PREP_02", "ICPC Preparation Contest 2", 
+            LocalDateTime.of(2026, 2, 10, 9, 0), 300, false);
+        Contest random13 = new Contest("CODING_CUP_02", "Coding Cup Extended Edition", 
+            LocalDateTime.of(2026, 2, 14, 16, 0), 120, false);
+        Contest random14 = new Contest("TECH_JAN_FEB", "Tech Challenge January-February", 
+            LocalDateTime.of(2026, 2, 17, 10, 0), 150, false);
+        Contest random15 = new Contest("SPRING_PREP", "Spring Programming Challenge", 
+            LocalDateTime.of(2026, 2, 23, 13, 0), 120, false);
+        Contest random16 = new Contest("DATA_QUEST", "Data Structures Quest", 
+            LocalDateTime.of(2026, 2, 27, 11, 0), 180, false);
+
         contests.add(cf_future1);
         contests.add(cf_future2);
         contests.add(cf_future3);
@@ -196,21 +286,50 @@ public class ContestDatabase {
         contests.add(cf_future5);
         contests.add(cf_future6);
         contests.add(cf_future7);
+        contests.add(cf_future8);
+        contests.add(cf_future9);
+        contests.add(cf_future10);
+        contests.add(cf_future11);
+        contests.add(cf_future12);
         contests.add(abc_future1);
         contests.add(abc_future2);
         contests.add(abc_future3);
         contests.add(abc_future4);
         contests.add(abc_future5);
         contests.add(abc_future6);
+        contests.add(abc_future7);
+        contests.add(abc_future8);
+        contests.add(abc_future9);
+        contests.add(abc_future10);
+        contests.add(abc_future11);
         contests.add(arc_future1);
         contests.add(arc_future2);
+        contests.add(arc_future3);
+        contests.add(arc_future4);
+        contests.add(arc_future5);
+        contests.add(arc_future6);
         contests.add(agc_future1);
+        contests.add(agc_future2);
+        contests.add(agc_future3);
         contests.add(edu_future1);
         contests.add(edu_future2);
         contests.add(edu_future3);
+        contests.add(edu_future4);
+        contests.add(edu_future5);
+        contests.add(edu_future6);
+        contests.add(edu_future7);
+        contests.add(edu_future8);
         contests.add(lc_future1);
         contests.add(lc_future2);
         contests.add(lc_future3);
+        contests.add(lc_future4);
+        contests.add(lc_future5);
+        contests.add(lc_future6);
+        contests.add(lc_future7);
+        contests.add(lc_future8);
+        contests.add(lc_bweekly1);
+        contests.add(lc_bweekly2);
+        contests.add(lc_bweekly3);
         contests.add(random1);
         contests.add(random2);
         contests.add(random3);
@@ -218,6 +337,15 @@ public class ContestDatabase {
         contests.add(random5);
         contests.add(random6);
         contests.add(random7);
+        contests.add(random8);
+        contests.add(random9);
+        contests.add(random10);
+        contests.add(random11);
+        contests.add(random12);
+        contests.add(random13);
+        contests.add(random14);
+        contests.add(random15);
+        contests.add(random16);
     }
 
     private void addRealisticParticipantsToPastContest(Contest contest) {

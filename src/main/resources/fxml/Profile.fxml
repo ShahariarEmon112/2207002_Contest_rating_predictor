@@ -35,6 +35,10 @@
                 <font><Font name="System Bold" size="14" /></font>
             </Button>
             
+            <Button onAction="#handleViewLeaderboard" styleClass="navbar-button" text="🎯 Leaderboard">
+                <font><Font name="System Bold" size="14" /></font>
+            </Button>
+            
             <Button onAction="#handleLogout" styleClass="navbar-button-logout" text="Logout">
                 <font><Font name="System Bold" size="14" /></font>
             </Button>
@@ -178,6 +182,11 @@
                     </font>
                 </Button>
                 <Button onAction="#handleViewStandings" prefHeight="50" prefWidth="200" styleClass="action-button-primary" text="📊 View Standings">
+                    <font>
+                        <Font name="System Bold" size="20.0" />
+                    </font>
+                </Button>
+                <Button onAction="#handleViewLeaderboard" prefHeight="50" prefWidth="200" styleClass="action-button-primary" text="🏆 Team Leaderboard">
                     <font>
                         <Font name="System Bold" size="20.0" />
                     </font>
